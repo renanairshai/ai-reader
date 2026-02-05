@@ -8,6 +8,7 @@
 </head>
 <body>
     <canvas id="rainbow-canvas" aria-hidden="true"></canvas>
+    <div id="themes-gradient-overlay" class="themes-gradient-overlay" aria-hidden="true"></div>
 
     <div class="container">
         <nav class="nav">
@@ -146,27 +147,73 @@
             </div>
         </div>
 
-        <!-- Themes Page -->
+        <!-- Themes Page: 3D cube, one theme per face, click+drag to rotate -->
         <div id="themes" class="page">
-            <div class="themes-content">
-                <p class="themes-intro">Core concepts and tensions that shape how we design for AI product.</p>
-                <div class="themes-tension-list">
-                    <div class="tension-item">
-                        <strong>Originality vs. Efficiency</strong><br>
-                        Exploring the tension between creating truly novel work and leveraging AI in the creative process
+            <p class="themes-intro themes-intro-top">Core concepts and tensions that shape how we design for AI product.</p>
+            <div class="themes-page-scene" id="themes-scene" aria-label="Explore themes - click and drag to rotate the cube">
+                <div class="themes-cube-perspective-wrap" id="themes-cube-wrap">
+                <div class="themes-cube-wrapper" id="themes-cube">
+                    <div class="cube-face face-front">
+                        <div class="cube-face-inner">
+                            <span class="cube-tension-title">Creation<br>vs.<br>Curation</span>
+                        </div>
                     </div>
-                    <div class="tension-item">
-                        <strong>Serendipity vs. Predictability</strong><br>
-                        Balancing unexpected discovery and inspiration with reliable, consistent creative outcomes
+                    <div class="cube-face face-back">
+                        <div class="cube-face-inner">
+                            <span class="cube-tension-title">Creative Control<br>vs.<br>Black Box Magic</span>
+                        </div>
                     </div>
-                    <div class="tension-item">
-                        <strong>Creative Control vs. AI Autonomy</strong><br>
-                        Navigating the spectrum between human direction and allowing AI systems room for independent contribution
+                    <div class="cube-face face-right">
+                        <div class="cube-face-inner">
+                            <span class="cube-tension-title">Serendipity<br>vs.<br>Predictability</span>
+                        </div>
                     </div>
-                    <div class="tension-item">
-                        <strong>Craft Process vs. Output Quality</strong><br>
-                        Examining the value of the creative journey itself against the focus on polished end results
+                    <div class="cube-face face-left">
+                        <div class="cube-face-inner">
+                            <span class="cube-tension-title">Craft Process<br>vs.<br>Efficiency</span>
+                        </div>
                     </div>
+                    <div class="cube-face face-top">
+                        <div class="cube-face-inner"></div>
+                    </div>
+                    <div class="cube-face face-bottom">
+                        <div class="cube-face-inner"></div>
+                    </div>
+                </div>
+                </div>
+            </div>
+            <p class="themes-intro themes-intro-bottom">Drag and click to explore each of the 4 tensions.</p>
+
+            <!-- Tension detail content (visible in tension view, black text, same style as main intro) -->
+            <div class="tension-content-panel" id="tension-content-panel" aria-live="polite">
+                <div class="tension-content" data-tension="front" hidden>
+                    <h2 class="tension-content-title">Creation vs. Curation</h2>
+                    <p>Exploring the shift from creating entirely new work to selecting, refining, and directing AI-generated options.</p>
+                    <p>AI is fundamentally changing the designer's role—from generating ideas from nothing to curating AI-generated possibilities. But curation isn't just selection; it's also composition. Traditional creative practice has always involved curating disparate elements together—assembling mood boards, combining references, synthesizing inspirations. The creative act lies in how these pieces are processed and meshed into a cohesive vision.</p>
+                    <p>Current AI tools don't support this. They treat outputs as finished products rather than raw material to be shaped and combined. When users encounter promising results that aren't quite right, they lack controls to refine specific elements or merge multiple inspirations. Instead, they're forced into repetitive regeneration cycles, abandoning what worked. This undermines both efficiency and ownership—when users can only regenerate rather than deliberately compose and refine, the final output feels like luck rather than craft.</p>
+                    <p><strong>Opportunity:</strong> Design interfaces that embrace both dimensions of curation—refinement and composition. Provide granular controls to selectively improve elements, tools to combine aspects from different outputs, and pathways to synthesize multiple inspirations while preserving what works. By enabling deliberate decision-making at every step, we strengthen authorship and transform AI from a creation tool into a collaborative partner, where the final work genuinely belongs to the user who shaped it.</p>
+                    <p class="tension-back-wrap"><a href="#themes" class="tension-back-link" data-page="themes" aria-label="Back to exploring the tensions">← Back to exploring the tensions</a></p>
+                </div>
+                <div class="tension-content" data-tension="right" hidden>
+                    <h2 class="tension-content-title">Serendipity vs. Predictability</h2>
+                    <p>Balancing unexpected discovery and inspiration with reliable, consistent creative outcomes. How do we harness serendipity and happy mistakes as part of the AI process?</p>
+                    <p>As AI systems become more accurate and tailored to user preferences, they risk becoming predictable and limiting creative exploration. Users may find themselves in creative echo chambers, receiving outputs that align with their expressed preferences but don't challenge or expand their creative horizons. The elimination of "happy accidents" and unexpected discoveries that often spark creative breakthroughs in traditional processes could lead to creative stagnation and homogenized outputs.</p>
+                    <p><strong>Opportunity:</strong> Design interfaces that intentionally introduce controlled serendipity and unexpected elements into the creative process. These interfaces would balance precision with surprise, offering users both expected results and novel directions they might not have considered. By creating mechanisms for users to adjust the balance between predictability and discovery, we can preserve the joy of unexpected creative insights while still delivering useful outputs. This approach would enable AI to expand creative possibilities rather than narrowing them.</p>
+                    <p class="tension-back-wrap"><a href="#themes" class="tension-back-link" data-page="themes" aria-label="Back to exploring the tensions">← Back to exploring the tensions</a></p>
+                </div>
+                <div class="tension-content tension-content-back" data-tension="back" hidden>
+                    <h2 class="tension-content-title">Creative Control vs. Black Box Magic</h2>
+                    <p>Examining the tension between transparent processes where users have multiple intervention points versus opaque "magical" outcomes that are delivered whole with limited visibility into how they were created and fewer opportunities for nuanced refinement.</p>
+                    <p>Users often feel they must choose between surrendering creative control to receive AI assistance or maintaining control at the cost of AI benefits. Many interfaces offer either high-level, vague direction or extremely technical parameters that require specialized knowledge. This creates a gap where everyday creators struggle to meaningfully direct AI systems in ways that align with their creative vision and workflow. Users may feel they're simply selecting among AI-determined options rather than truly directing the creative process.</p>
+                    <p><strong>Opportunity:</strong> Develop interfaces that offer intuitive, meaningful control mechanisms that match how creators naturally think about their work. These interfaces would provide multiple intervention points throughout the creative process, allowing users to guide the AI without requiring technical expertise. By designing controls that feel natural and expressive rather than technical and constrained, we can create true co-creative relationships where human direction and AI capabilities complement each other.</p>
+                    <p class="tension-back-wrap"><a href="#themes" class="tension-back-link" data-page="themes" aria-label="Back to exploring the tensions">← Back to exploring the tensions</a></p>
+                </div>
+                <div class="tension-content" data-tension="left" hidden>
+                    <h2 class="tension-content-title">Craft Process vs. Efficiency</h2>
+                    <p>Contrasting the value of the intentional creative journey and skill-building with the speed and convenience of AI-accelerated workflows.</p>
+                    <p>Current AI tools often present outputs as finished products rather than starting points for further refinement. Users frequently find themselves regenerating completely new outputs rather than iteratively improving existing ones. This creates inefficient workflows where promising directions are abandoned instead of refined. The lack of granular control over specific elements forces users into repetitive prompt revision cycles rather than targeted improvements.</p>
+                    <p><strong>Opportunity:</strong> Design interfaces that facilitate natural iteration cycles, allowing users to selectively refine aspects of AI-generated outputs. By creating clear pathways for users to provide feedback, make targeted adjustments, and explore variations, we can transform the creative process from a series of disconnected generations into a coherent journey of progressive refinement. These interfaces would preserve what works while allowing focused and granular enhancement of elements that don't meet the user's vision.</p>
+                    <p class="tension-back-wrap"><a href="#themes" class="tension-back-link" data-page="themes" aria-label="Back to exploring the tensions">← Back to exploring the tensions</a></p>
                 </div>
             </div>
         </div>

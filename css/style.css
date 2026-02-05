@@ -17,6 +17,17 @@
   --color-accent: #8b5cf6;
   --color-accent-hover: #8b5cf6;
   --color-quote-cite: #888;
+  /* Rainbow gradient: same spectrum as cursor trail (hsl hue 0–360, 70% sat, 65% light) */
+  --rainbow-hover: linear-gradient(
+    90deg,
+    hsl(0, 70%, 65%),
+    hsl(45, 70%, 65%),
+    hsl(120, 70%, 65%),
+    hsl(180, 70%, 65%),
+    hsl(240, 70%, 65%),
+    hsl(300, 70%, 65%),
+    hsl(360, 70%, 65%)
+  );
 
   --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-size-intro: 28px;
@@ -52,7 +63,7 @@ body {
   color: var(--color-text);
   font-family: var(--font-family);
   line-height: var(--line-height-body);
-  padding: var(--spacing-page) var(--spacing-page) var(--spacing-page-bottom);
+  padding: var(--spacing-page) 0 var(--spacing-page-bottom);
   cursor: none;
   overflow-x: hidden;
 }
@@ -67,15 +78,44 @@ body {
   width: 100%;
   height: 100%;
   pointer-events: none;
-  z-index: -1;
+  z-index: 9999;
+}
+
+/* Gradient overlay when a tension is selected (freeform, trail colors) */
+.themes-gradient-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s ease;
+}
+
+body.tension-view .themes-gradient-overlay {
+  opacity: 1;
+  /* All trail cursor colors: red, orange, yellow, green, cyan, blue, magenta (hsl 70% sat, 65% light) */
+  background:
+    radial-gradient(ellipse 90% 70% at 10% 20%, hsl(0, 70%, 65%), transparent 55%),
+    radial-gradient(ellipse 80% 80% at 90% 15%, hsl(45, 70%, 65%), transparent 50%),
+    radial-gradient(ellipse 85% 75% at 85% 85%, hsl(120, 70%, 65%), transparent 55%),
+    radial-gradient(ellipse 75% 90% at 15% 80%, hsl(180, 70%, 65%), transparent 55%),
+    radial-gradient(ellipse 80% 85% at 50% 50%, hsl(240, 70%, 65%), transparent 55%),
+    radial-gradient(ellipse 90% 80% at 70% 60%, hsl(300, 70%, 65%), transparent 50%),
+    radial-gradient(ellipse 85% 85% at 30% 40%, hsl(60, 70%, 65%), transparent 50%),
+    radial-gradient(ellipse 75% 75% at 95% 70%, hsl(200, 70%, 65%), transparent 50%),
+    radial-gradient(ellipse 70% 90% at 5% 50%, hsl(280, 70%, 65%), transparent 50%),
+    hsl(330, 60%, 60%);
 }
 
 /* --------------------------------------------------------------------------
    Layout container
    -------------------------------------------------------------------------- */
+/* Horizontal padding here so logo and all page content share the same left edge */
 .container {
   max-width: var(--max-width-container);
   margin: 0 auto;
+  padding-left: var(--spacing-page);
+  padding-right: var(--spacing-page);
   position: relative;
   z-index: 1;
 }
@@ -101,6 +141,7 @@ body {
   font-weight: var(--font-weight-light);
   letter-spacing: var(--letter-spacing-tight);
   margin-bottom: -12px;
+  transition: color 0.3s ease, background 0.3s ease, -webkit-background-clip 0.3s ease, background-clip 0.3s ease;
 }
 
 .subtitle-nav {
@@ -108,6 +149,18 @@ body {
   font-size: var(--font-size-intro);
   font-weight: var(--font-weight-light);
   letter-spacing: var(--letter-spacing-tight);
+  transition: color 0.3s ease, background 0.3s ease, -webkit-background-clip 0.3s ease, background-clip 0.3s ease;
+}
+
+.nav .logo-section:hover .logo,
+.nav .logo-section:hover .subtitle-nav,
+.nav .logo-section:active .logo,
+.nav .logo-section:active .subtitle-nav {
+  background: var(--rainbow-hover);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
 }
 
 .nav-links {
@@ -122,12 +175,17 @@ body {
   font-size: var(--font-size-nav);
   font-weight: var(--font-weight-light);
   letter-spacing: 0.3px;
-  transition: color 0.3s ease;
+  transition: color 0.3s ease, background 0.3s ease, -webkit-background-clip 0.3s ease, background-clip 0.3s ease;
   cursor: pointer;
 }
 
-.nav-links a:hover {
-  color: var(--color-text);
+.nav-links a:hover,
+.nav-links a:active {
+  background: var(--rainbow-hover);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
 }
 
 /* --------------------------------------------------------------------------
@@ -155,11 +213,36 @@ body {
 }
 
 .intro-text .highlight {
-  transition: color 0.3s ease;
+  transition: color 0.35s ease, background 0.35s ease, -webkit-background-clip 0.35s ease, background-clip 0.35s ease;
 }
 
+/* Rainbow gradient (cursor trail spectrum) on hover */
 .intro-text p:hover .highlight {
-  color: var(--color-accent);
+  background: var(--rainbow-hover);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* Fallback when gradient text isn’t supported: solid purple */
+@supports not ((background-clip: text) or (-webkit-background-clip: text)) {
+  .intro-text p:hover .highlight,
+  .link-card:hover h3,
+  .footer a:hover,
+  .quote-block:hover,
+  .quote-block:hover .quote-block-source,
+  .quote-block:hover .quote-block-source a,
+  .nav-links a:hover,
+  .nav-links a:active,
+  .nav .logo-section:hover .logo,
+  .nav .logo-section:hover .subtitle-nav,
+  .nav .logo-section:active .logo,
+  .nav .logo-section:active .subtitle-nav {
+    background: none;
+    -webkit-text-fill-color: unset;
+    color: var(--color-accent);
+  }
 }
 
 .intro-text .intro-spacer {
@@ -287,7 +370,11 @@ body {
 }
 
 .link-card:hover h3 {
-  color: var(--color-accent);
+  background: var(--rainbow-hover);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
 }
 
 .link-card:hover p {
@@ -300,7 +387,7 @@ body {
   font-weight: var(--font-weight-normal);
   margin-bottom: 6px;
   letter-spacing: -0.2px;
-  transition: color 0.3s ease;
+  transition: color 0.3s ease, background 0.3s ease, -webkit-background-clip 0.3s ease, background-clip 0.3s ease;
 }
 
 .link-card p {
@@ -335,14 +422,18 @@ body {
   font-weight: var(--font-weight-light);
   letter-spacing: -1.2px;
   line-height: 1.1;
-  transition: color 0.3s ease;
+  transition: color 0.3s ease, background 0.3s ease, -webkit-background-clip 0.3s ease, background-clip 0.3s ease;
   display: block;
   text-align: left;
   cursor: pointer;
 }
 
 .footer a:hover {
-  color: var(--color-accent);
+  background: var(--rainbow-hover);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
 }
 
 .footer a .smiley {
@@ -398,6 +489,224 @@ body {
   font-size: 32px;
   margin-bottom: 20px;
 }
+
+/* Intro text above and below the cube on Explore Themes page */
+#themes .themes-intro-top,
+#themes .themes-intro-bottom {
+  color: var(--color-text-muted);
+  font-weight: var(--font-weight-light);
+  width: 30%;
+  max-width: 420px;
+  letter-spacing: 0.2px;
+}
+
+#themes .themes-intro-top {
+  font-size: 20px;
+}
+
+#themes .themes-intro-bottom {
+  font-size: 15px;
+}
+
+#themes .themes-intro-top {
+  margin-bottom: var(--spacing-section);
+}
+
+#themes .themes-intro-bottom {
+  margin-top: var(--spacing-section);
+  margin-bottom: 0;
+}
+
+/* Tension view: cube 60% smaller, top-right under menu; hide intro/bottom; show back link */
+body.tension-view #themes .themes-intro-top,
+body.tension-view #themes .themes-intro-bottom {
+  display: none;
+}
+
+.themes-cube-perspective-wrap {
+  display: contents;
+}
+
+/* Cube is moved to body in JS so it stays fixed (sticky) when the user scrolls */
+body.tension-view .themes-cube-perspective-wrap {
+  display: block;
+  position: fixed;
+  top: 11rem;
+  right: 12rem;
+  width: 40vmin;
+  height: 40vmin;
+  perspective: 600px;
+  perspective-origin: 50% 50%;
+  transform: scale(0.4);
+  transform-origin: 100% 0%;
+  transition: top 0.5s ease, right 0.5s ease, transform 0.5s ease;
+  z-index: 10;
+  pointer-events: none;
+}
+
+body.tension-view .themes-cube-perspective-wrap .themes-cube-wrapper {
+  pointer-events: auto;
+}
+
+body.tension-view .themes-page-scene {
+  min-height: 0;
+  margin-top: 0;
+  padding: 0;
+  position: static;
+}
+
+body.tension-view .logo,
+body.tension-view .subtitle-nav,
+body.tension-view .nav-links a {
+  color: #000;
+}
+
+/* On non-black background (tension view): menu hover and click = white */
+body.tension-view .nav-links a:hover,
+body.tension-view .nav-links a:active,
+body.tension-view .nav .logo-section:hover .logo,
+body.tension-view .nav .logo-section:hover .subtitle-nav,
+body.tension-view .nav .logo-section:active .logo,
+body.tension-view .nav .logo-section:active .subtitle-nav {
+  background: none;
+  -webkit-text-fill-color: unset;
+  color: #fff;
+}
+
+body.tension-view .cube-tension-title {
+  font-size: clamp(0.975rem, 3.3vmin, 1.275rem);
+}
+
+body.tension-view .cube-face-inner {
+  padding: 0.9rem;
+}
+
+/* Tension detail content panel (same styling as main intro text, black in tension view) */
+.tension-content-panel {
+  display: none;
+}
+
+body.tension-view .tension-content-panel {
+  display: block;
+  position: relative;
+  z-index: 5;
+  max-width: 55%;
+  margin-left: 0;
+  margin-top: 1rem;
+  padding-right: 1rem;
+  padding-bottom: 5rem;
+}
+
+body.tension-view .tension-content {
+  font-size: var(--font-size-intro);
+  font-weight: var(--font-weight-light);
+  line-height: 1.3;
+  color: #000;
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+body.tension-view .tension-content p {
+  margin-bottom: 1.25em;
+}
+
+body.tension-view .tension-content p:last-child {
+  margin-bottom: 0;
+}
+
+.tension-back-wrap {
+  margin-top: 2em;
+  margin-bottom: 0;
+}
+
+body.tension-view .tension-back-link {
+  font-size: 0.95rem;
+  color: #000;
+  text-decoration: none;
+  letter-spacing: 0.2px;
+}
+
+body.tension-view .tension-back-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+body.tension-view .tension-content-title {
+  font-size: var(--font-size-intro);
+  font-weight: var(--font-weight-normal);
+  color: #000;
+  margin-bottom: 1em;
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+/* 3D theme cube: black box, 2px white outline, ~40% viewport; click+drag to rotate */
+.themes-page-scene {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 70vh;
+  margin-top: calc(-8rem + 10px);
+  padding: var(--spacing-section);
+  perspective: 800px;
+  perspective-origin: 50% 50%;
+  transform-style: preserve-3d;
+  user-select: none;
+}
+
+.themes-cube-wrapper {
+  width: 40vmin;
+  height: 40vmin;
+  position: relative;
+  transform-style: preserve-3d;
+  will-change: transform;
+  user-select: none;
+}
+
+.cube-face {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  border: 2px solid #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backface-visibility: hidden;
+  overflow: hidden;
+  transform-style: preserve-3d;
+  user-select: none;
+}
+
+.cube-face-inner {
+  padding: 1.5rem;
+  text-align: center;
+  color: var(--color-text);
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-normal);
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+.cube-tension-title {
+  display: block;
+  font-size: clamp(1rem, 4vmin, 1.5rem);
+  line-height: 1.35;
+  color: var(--color-text);
+}
+
+.cube-label {
+  font-size: clamp(0.85rem, 2.2vmin, 1rem);
+  font-weight: var(--font-weight-normal);
+  color: var(--color-text);
+}
+
+/* 3D positions: each face is 40vmin wide/tall, cube depth = 40vmin, so half = 20vmin */
+.face-front  { transform: translateZ(20vmin); }
+.face-back   { transform: rotateY(180deg) translateZ(20vmin); }
+.face-right  { transform: rotateY(90deg) translateZ(20vmin); }
+.face-left   { transform: rotateY(-90deg) translateZ(20vmin); }
+.face-top    { transform: rotateX(90deg) translateZ(20vmin); }
+.face-bottom { transform: rotateX(-90deg) translateZ(20vmin); }
 
 .themes-intro {
   color: var(--color-text-muted);
@@ -480,26 +789,38 @@ body {
   padding-top: 40px;
 }
 
+.quote-block {
+  transition: color 0.3s ease, background 0.3s ease, -webkit-background-clip 0.3s ease, background-clip 0.3s ease;
+}
+
 .quote-block:hover {
-  color: var(--color-accent);
+  background: var(--rainbow-hover);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
 }
 
 .quote-block-source {
   font-size: 16px;
   color: var(--color-quote-cite);
   margin-top: 10px;
-  transition: color 0.3s ease;
+  transition: color 0.3s ease, background 0.3s ease, -webkit-background-clip 0.3s ease, background-clip 0.3s ease;
 }
 
 .quote-block-source a {
   color: var(--color-quote-cite);
   text-decoration: none;
-  transition: color 0.3s ease;
+  transition: color 0.3s ease, background 0.3s ease, -webkit-background-clip 0.3s ease, background-clip 0.3s ease;
 }
 
 .quote-block:hover .quote-block-source,
 .quote-block:hover .quote-block-source a {
-  color: var(--color-accent);
+  background: var(--rainbow-hover);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
 }
 
 .quote-container {
@@ -586,6 +907,19 @@ button,
 .logo-section,
 .floating-object {
   cursor: pointer !important;
+}
+
+.themes-cube-wrapper {
+  cursor: grab;
+}
+
+body.cube-dragging .themes-cube-wrapper {
+  cursor: grabbing;
+}
+
+/* Prevent text selection anywhere on the page while dragging the cube */
+body.cube-dragging {
+  user-select: none;
 }
 
 /* --------------------------------------------------------------------------
