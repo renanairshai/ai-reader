@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design for AI - A Reader</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <canvas id="rainbow-canvas" aria-hidden="true"></canvas>
+
+    <div class="container">
+        <nav class="nav">
+            <div class="logo-section" data-page="home">
+                <div class="logo">Design for AI</div>
+                <div class="subtitle-nav">A Reader</div>
+            </div>
+            <div class="nav-links">
+                <a href="#themes" data-page="themes">Explore Themes</a>
+                <a href="#ltdr" data-page="ltdr">TL;DR</a>
+                <a href="#home" data-page="home">AI Reader</a>
+            </div>
+        </nav>
+
+        <!-- Home Page -->
+        <div id="home" class="page active">
+            <div class="intro-text">
+                <p>Recent AI advancements challenge designers to re-imagine digital interactions beyond traditional interfaces. As AI demonstrates unprecedented capabilities, <span class="highlight">we can revolutionize not just what computers do, but how people interact with them.</span></p>
+                <p class="intro-spacer">The digital landscape is evolving toward more ephemeral, personalized, and contextual experiences. While text boxes and prompts have become ubiquitous AI entry points, <span class="highlight">we aim to pioneer interfaces that reveal new dimensions of human-AI collaboration.</span></p>
+                <p>For creativity, we need frameworks balancing automation with human expression, <span class="highlight">establishing true co-creation relationships</span> where both contribute their unique strengths.</p>
+                <p>Beyond the technological advancement race, interface and <span class="highlight">user experience design will increasingly determine how AI capabilities translate to user value.</span> Companies that thrive will excel not only in AI technology but in crafting human-centered experiences that make powerful capabilities intuitive and delightful.</p>
+            </div>
+
+            <section class="reading-list" aria-labelledby="reading-list-heading">
+                <h2 id="reading-list-heading">Reading List</h2>
+                <div class="links-grid">
+                    <article class="link-card">
+                        <a href="https://www.ibm.com/design/ai/" target="_blank" rel="noopener noreferrer">
+                            <h3>IBM Design for AI</h3>
+                            <p>IBM Design for AI is a resource hub that provides guidelines and frameworks for designers and developers to create responsible AI experiences.</p>
+                        </a>
+                    </article>
+                    <article class="link-card">
+                        <a href="https://pair.withgoogle.com/" target="_blank" rel="noopener noreferrer">
+                            <h3>People + AI Research</h3>
+                            <p>Research and resources for designing human-centered AI systems that augment human capabilities.</p>
+                        </a>
+                    </article>
+                    <article class="link-card">
+                        <a href="https://www.microsoft.com/en-us/research/group/fate/" target="_blank" rel="noopener noreferrer">
+                            <h3>Fairness, Accountability, Transparency, and Ethics in AI</h3>
+                            <p>Research on responsible AI development and deployment, focusing on ethical considerations in AI systems.</p>
+                        </a>
+                    </article>
+                    <article class="link-card">
+                        <a href="https://www.nngroup.com/articles/ai-ux/" target="_blank" rel="noopener noreferrer">
+                            <h3>AI and UX</h3>
+                            <p>User experience guidelines and research for AI-powered interfaces and interactions.</p>
+                        </a>
+                    </article>
+                    <article class="link-card">
+                        <a href="https://www.interaction-design.org/literature/topics/ai-design" target="_blank" rel="noopener noreferrer">
+                            <h3>AI in Design</h3>
+                            <p>Comprehensive resources on designing with and for artificial intelligence systems.</p>
+                        </a>
+                    </article>
+                    <article class="link-card">
+                        <a href="https://www.designbetter.co/design-systems-handbook" target="_blank" rel="noopener noreferrer">
+                            <h3>Design Systems for AI</h3>
+                            <p>Guidelines for creating consistent design systems that work with AI-powered products.</p>
+                        </a>
+                    </article>
+                    <article class="link-card">
+                        <a href="https://www.thoughtworks.com/insights/blog/responsible-ai-design" target="_blank" rel="noopener noreferrer">
+                            <h3>Responsible AI Design</h3>
+                            <p>Principles and practices for designing AI systems that are ethical, inclusive, and beneficial.</p>
+                        </a>
+                    </article>
+                    <article class="link-card">
+                        <a href="https://www.ideo.com/blog/designing-for-ai" target="_blank" rel="noopener noreferrer">
+                            <h3>Designing for AI</h3>
+                            <p>Design thinking approaches to creating meaningful AI experiences that serve human needs.</p>
+                        </a>
+                    </article>
+                    <article class="link-card">
+                        <a href="https://aiuxdesign.org/conversational-interfaces" target="_blank" rel="noopener noreferrer">
+                            <h3>Conversational AI Patterns</h3>
+                            <p>Best practices for designing natural language interfaces and chatbot experiences that feel intuitive.</p>
+                        </a>
+                    </article>
+                    <article class="link-card">
+                        <a href="https://designsystem.ai/components" target="_blank" rel="noopener noreferrer">
+                            <h3>AI Component Library</h3>
+                            <p>Reusable design components specifically crafted for AI-powered applications and interfaces.</p>
+                        </a>
+                    </article>
+                    <article class="link-card">
+                        <a href="https://ethicalai.design/framework" target="_blank" rel="noopener noreferrer">
+                            <h3>Ethical AI Framework</h3>
+                            <p>Comprehensive guidelines for building AI systems that prioritize fairness, transparency, and user wellbeing.</p>
+                        </a>
+                    </article>
+                    <article class="link-card">
+                        <a href="https://promptdesign.studio/principles" target="_blank" rel="noopener noreferrer">
+                            <h3>Prompt Design Principles</h3>
+                            <p>Strategic approaches to crafting effective prompts that enhance human-AI collaboration.</p>
+                        </a>
+                    </article>
+                    <article class="link-card">
+                        <a href="https://aiuxresearch.com/studies/2024" target="_blank" rel="noopener noreferrer">
+                            <h3>AI UX Research Studies</h3>
+                            <p>Latest research findings on user behavior and preferences in AI-powered digital experiences.</p>
+                        </a>
+                    </article>
+                    <article class="link-card">
+                        <a href="https://multimodal.design/handbook" target="_blank" rel="noopener noreferrer">
+                            <h3>Multimodal AI Design</h3>
+                            <p>Design patterns for AI systems that combine text, voice, vision, and gesture interactions.</p>
+                        </a>
+                    </article>
+                    <article class="link-card">
+                        <a href="https://aidesigntoolkit.org/resources" target="_blank" rel="noopener noreferrer">
+                            <h3>AI Design Toolkit</h3>
+                            <p>Practical tools, templates, and worksheets for designers working on AI-powered products.</p>
+                        </a>
+                    </article>
+                    <article class="link-card">
+                        <a href="https://futureofai.design/trends" target="_blank" rel="noopener noreferrer">
+                            <h3>Emerging AI Design Trends</h3>
+                            <p>Forward-looking analysis of emerging patterns and future directions in AI interface design.</p>
+                        </a>
+                    </article>
+                </div>
+            </section>
+
+            <footer class="footer">
+                <a href="https://notebooklm.google.com/notebook/cf33a7ef-d798-48f2-91c5-52b2c3599d53?_gl=1*k3sxyy*_ga*MTYwMDIyMTU5NS4xNzQzNjY3NjAw*_ga_W0LDH41ZCB*czE3NTExOTYyNDYkbzgkZzAkdDE3NTExOTYyNDYkajYwJGwwJGgw" target="_blank" rel="noopener noreferrer">
+                    Access reading materials in Google NotebookLM →<br>
+                    Ask questions, generate summaries, dig deeper <span class="smiley">☺</span>
+                </a>
+            </footer>
+
+            <div class="small-footer">
+                <p>This website was generated entirely by Claude Sonnet 4.</p>
+                <p>© Lightricks Design Ops 2025</p>
+            </div>
+        </div>
+
+        <!-- Themes Page -->
+        <div id="themes" class="page">
+            <div class="themes-content">
+                <p class="themes-intro">Core concepts and tensions that shape how we design for AI product.</p>
+                <div class="themes-tension-list">
+                    <div class="tension-item">
+                        <strong>Originality vs. Efficiency</strong><br>
+                        Exploring the tension between creating truly novel work and leveraging AI in the creative process
+                    </div>
+                    <div class="tension-item">
+                        <strong>Serendipity vs. Predictability</strong><br>
+                        Balancing unexpected discovery and inspiration with reliable, consistent creative outcomes
+                    </div>
+                    <div class="tension-item">
+                        <strong>Creative Control vs. AI Autonomy</strong><br>
+                        Navigating the spectrum between human direction and allowing AI systems room for independent contribution
+                    </div>
+                    <div class="tension-item">
+                        <strong>Craft Process vs. Output Quality</strong><br>
+                        Examining the value of the creative journey itself against the focus on polished end results
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TL;DR Page -->
+        <div id="ltdr" class="page">
+            <div class="ltdr-content">
+                <p class="ltdr-intro">Short on time? We've distilled key insights and memorable quotes from the essential readings.</p>
+                <div class="ltdr-quote-list">
+                    <blockquote class="quote-block">
+                        "The best AI interfaces are invisible—they amplify human capability without demanding attention to the technology itself."
+                        <div class="quote-block-source">
+                            <a href="https://www.ibm.com/design/ai/" target="_blank" rel="noopener noreferrer">IBM Design for AI Guidelines</a>
+                        </div>
+                    </blockquote>
+                    <blockquote class="quote-block">
+                        "AI doesn't replace creativity; it changes the medium through which creativity flows."
+                        <div class="quote-block-source">
+                            <a href="https://pair.withgoogle.com/" target="_blank" rel="noopener noreferrer">People + AI Research</a>
+                        </div>
+                    </blockquote>
+                    <blockquote class="quote-block">
+                        "The future of AI design isn't about making machines more human, but about making human-machine collaboration more natural."
+                        <div class="quote-block-source">
+                            <a href="https://www.microsoft.com/en-us/research/group/fate/" target="_blank" rel="noopener noreferrer">Microsoft FATE Research</a>
+                        </div>
+                    </blockquote>
+                    <blockquote class="quote-block">
+                        "Users need to understand not just what AI can do, but why it makes the decisions it makes."
+                        <div class="quote-block-source">
+                            <a href="https://www.nngroup.com/articles/ai-ux/" target="_blank" rel="noopener noreferrer">Nielsen Norman Group AI UX</a>
+                        </div>
+                    </blockquote>
+                    <blockquote class="quote-block">
+                        "The challenge isn't building AI that thinks like humans, but designing systems that help humans think better."
+                        <div class="quote-block-source">
+                            <a href="https://www.interaction-design.org/literature/topics/ai-design" target="_blank" rel="noopener noreferrer">Interaction Design Foundation</a>
+                        </div>
+                    </blockquote>
+                    <blockquote class="quote-block">
+                        "Ethical AI design begins with understanding the human context, not the technical capability."
+                        <div class="quote-block-source">
+                            <a href="https://www.thoughtworks.com/insights/blog/responsible-ai-design" target="_blank" rel="noopener noreferrer">Thoughtworks Responsible AI</a>
+                        </div>
+                    </blockquote>
+                    <blockquote class="quote-block">
+                        "Good AI design feels like magic—complex technology that appears simple and intuitive to use."
+                        <div class="quote-block-source">
+                            <a href="https://www.ideo.com/blog/designing-for-ai" target="_blank" rel="noopener noreferrer">IDEO Design for AI</a>
+                        </div>
+                    </blockquote>
+                    <blockquote class="quote-block">
+                        "The most successful AI products don't announce themselves as AI—they simply solve problems better."
+                        <div class="quote-block-source">
+                            <a href="https://aiuxresearch.com/studies/2024" target="_blank" rel="noopener noreferrer">AI UX Research Studies</a>
+                        </div>
+                    </blockquote>
+                    <blockquote class="quote-block">
+                        "Conversational AI succeeds when it feels less like talking to a computer and more like thinking out loud."
+                        <div class="quote-block-source">
+                            <a href="https://aiuxdesign.org/conversational-interfaces" target="_blank" rel="noopener noreferrer">Conversational AI Patterns</a>
+                        </div>
+                    </blockquote>
+                    <blockquote class="quote-block">
+                        "The next frontier in AI design is creating systems that adapt to human emotion and context, not just logic."
+                        <div class="quote-block-source">
+                            <a href="https://futureofai.design/trends" target="_blank" rel="noopener noreferrer">Future of AI Design Trends</a>
+                        </div>
+                    </blockquote>
+                </div>
+            </div>
+        </div>
+
+        <!-- Workshop Info Page -->
+        <div id="workshop" class="page">
+            <div class="workshop-content">
+                <h1>Workshop Info</h1>
+                <h2>Overview</h2>
+                <p>This workshop explores the intersection of design and artificial intelligence, providing practical frameworks for creating human-centered AI experiences.</p>
+                <h2>Learning Objectives</h2>
+                <p>Participants will learn to design interfaces that leverage AI capabilities while maintaining focus on user needs, understand principles of responsible AI design, and develop strategies for human-AI collaboration in creative processes.</p>
+                <h2>Format</h2>
+                <p>Interactive sessions combining theory, case studies, and hands-on exercises. Participants will work through real design challenges using AI-first thinking.</p>
+                <h2>Prerequisites</h2>
+                <p>Basic understanding of design principles and user experience fundamentals. Familiarity with current AI tools and capabilities is helpful but not required.</p>
+                <h2>Materials</h2>
+                <p>All reading materials and resources are provided in this reader. Participants should review the reading list before attending the workshop.</p>
+                <h2>Duration</h2>
+                <p>Full-day workshop (8 hours) with breaks and interactive sessions throughout.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

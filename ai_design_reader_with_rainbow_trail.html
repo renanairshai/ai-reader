@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design for AI - A Reader</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            padding: 20px 20px 40px 20px;
+            cursor: none;
+            overflow-x: hidden;
+        }
+
+        /* Rainbow Trail Canvas */
+        #rainbow-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Navigation */
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 40px;
+        }
+
+        .logo-section {
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 300;
+            letter-spacing: -0.7px;
+            margin-bottom: -12px;
+        }
+
+        .subtitle-nav {
+            color: #666;
+            font-size: 28px;
+            font-weight: 300;
+            letter-spacing: -0.7px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            margin-top: 4px;
+        }
+
+        .nav-links a {
+            color: #ccc;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 300;
+            letter-spacing: 0.3px;
+            transition: color 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-links a:hover {
+            color: #fff;
+        }
+
+        /* Page content */
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* Home page */
+        .intro-text {
+            font-size: 28px;
+            font-weight: 300;
+            line-height: 1.3;
+            margin-bottom: 60px;
+            color: #ccc;
+            max-width: 85%;
+            letter-spacing: -0.7px;
+        }
+
+        .intro-text .highlight {
+            transition: color 0.3s ease;
+        }
+
+        .intro-text p:hover .highlight {
+            color: #8b5cf6;
+        }
+
+        /* 3D Floating Object */
+        .floating-object {
+            position: fixed;
+            top: 20%;
+            right: 15%;
+            width: 180px;
+            height: 180px;
+            z-index: 100;
+            cursor: grab;
+            opacity: 1;
+        }
+
+        .floating-object:active {
+            cursor: grabbing;
+        }
+
+        .wireframe-sphere {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            animation: sphereRotate 20s linear infinite;
+        }
+
+        .latitude-line {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .longitude-line {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Latitude lines (horizontal circles) */
+        .latitude-line:nth-child(1) {
+            width: 100%;
+            height: 100%;
+            opacity: 1;
+        }
+
+        .latitude-line:nth-child(2) {
+            width: 90%;
+            height: 45%;
+            opacity: 0.8;
+        }
+
+        .latitude-line:nth-child(3) {
+            width: 90%;
+            height: 45%;
+            transform: translate(-50%, -50%) translateY(20px);
+            opacity: 0.8;
+        }
+
+        .latitude-line:nth-child(4) {
+            width: 70%;
+            height: 25%;
+            opacity: 0.6;
+        }
+
+        .latitude-line:nth-child(5) {
+            width: 70%;
+            height: 25%;
+            transform: translate(-50%, -50%) translateY(35px);
+            opacity: 0.6;
+        }
+
+        .latitude-line:nth-child(6) {
+            width: 40%;
+            height: 10%;
+            opacity: 0.4;
+        }
+
+        .latitude-line:nth-child(7) {
+            width: 40%;
+            height: 10%;
+            transform: translate(-50%, -50%) translateY(50px);
+            opacity: 0.4;
+        }
+
+        /* Longitude lines (vertical circles) */
+        .longitude-line:nth-child(8) {
+            width: 100%;
+            height: 100%;
+            transform: translate(-50%, -50%) rotateY(0deg);
+            opacity: 1;
+        }
+
+        .longitude-line:nth-child(9) {
+            width: 100%;
+            height: 100%;
+            transform: translate(-50%, -50%) rotateY(30deg);
+            opacity: 0.8;
+        }
+
+        .longitude-line:nth-child(10) {
+            width: 100%;
+            height: 100%;
+            transform: translate(-50%, -50%) rotateY(60deg);
+            opacity: 0.6;
+        }
+
+        .longitude-line:nth-child(11) {
+            width: 100%;
+            height: 100%;
+            transform: translate(-50%, -50%) rotateY(90deg);
+            opacity: 1;
+        }
+
+        .longitude-line:nth-child(12) {
+            width: 100%;
+            height: 100%;
+            transform: translate(-50%, -50%) rotateY(120deg);
+            opacity: 0.6;
+        }
+
+        .longitude-line:nth-child(13) {
+            width: 100%;
+            height: 100%;
+            transform: translate(-50%, -50%) rotateY(150deg);
+            opacity: 0.8;
+        }
+
+        @keyframes sphereRotate {
+            0% {
+                transform: rotateY(0deg) rotateX(0deg);
+            }
+            100% {
+                transform: rotateY(360deg) rotateX(20deg);
+            }
+        }
+
+        /* Add perspective to the container */
+        .wireframe-sphere {
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .latitude-line,
+        .longitude-line {
+            transform-style: preserve-3d;
+        }
+
+        .reading-list {
+            margin-top: 40px;
+        }
+
+        .reading-list h2 {
+            font-size: 24px;
+            font-weight: 400;
+            margin-bottom: 40px;
+            color: #fff;
+            letter-spacing: -0.3px;
+        }
+
+        .links-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 40px 30px;
+        }
+
+        .link-card {
+            padding: 0;
+            transition: all 0.3s ease;
+        }
+
+        .link-card:hover h3 {
+            color: #8b5cf6;
+        }
+
+        .link-card:hover p {
+            color: #ccc;
+        }
+
+        .link-card h3 {
+            color: #fff;
+            font-size: 16px;
+            font-weight: 400;
+            margin-bottom: 6px;
+            letter-spacing: -0.2px;
+            transition: color 0.3s ease;
+        }
+
+        .link-card p {
+            color: #999;
+            font-size: 14px;
+            font-weight: 300;
+            line-height: 1.5;
+            letter-spacing: 0.1px;
+            transition: color 0.3s ease;
+        }
+
+        .link-card a {
+            color: inherit;
+            text-decoration: none;
+            display: block;
+            cursor: pointer;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 80px;
+            padding-top: 40px;
+            border-top: 1px solid #333;
+        }
+
+        .footer a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 48px;
+            font-weight: 300;
+            letter-spacing: -1.2px;
+            line-height: 1.1;
+            transition: color 0.3s ease;
+            display: block;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .footer a .smiley {
+            font-size: 52px;
+            vertical-align: -6px;
+        }
+
+        /* Small footer */
+        .small-footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #333;
+        }
+
+        .small-footer p {
+            color: #666;
+            font-size: 12px;
+            font-weight: 300;
+            letter-spacing: 0.2px;
+            text-align: left;
+        }
+
+        .footer a:hover {
+            color: #8b5cf6;
+        }
+
+        /* Workshop info page */
+        .workshop-content {
+            max-width: 800px;
+        }
+
+        .workshop-content h1 {
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+
+        .workshop-content h2 {
+            font-size: 24px;
+            margin: 40px 0 20px 0;
+            color: #fff;
+        }
+
+        .workshop-content p {
+            margin-bottom: 20px;
+            color: #ccc;
+        }
+
+        /* LTDR page */
+        .ltdr-content {
+            max-width: 800px;
+        }
+
+        .ltdr-content h1 {
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+
+        .quote-container {
+            background: #111;
+            padding: 40px;
+            border-radius: 8px;
+            margin: 40px 0;
+            text-align: center;
+        }
+
+        .quote-container blockquote {
+            font-size: 24px;
+            font-style: italic;
+            color: #fff;
+            margin-bottom: 20px;
+        }
+
+        .quote-container cite {
+            color: #888;
+            font-size: 16px;
+        }
+
+        /* Themes page */
+        .themes-content {
+            max-width: none;
+        }
+
+        .themes-content h1 {
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+
+        .theme-section {
+            margin-bottom: 60px;
+        }
+
+        .theme-section h2 {
+            font-size: 24px;
+            margin: 40px 0 20px 0;
+            color: #fff;
+        }
+
+        .theme-section p {
+            margin-bottom: 20px;
+            color: #ccc;
+        }
+
+        .theme-highlight {
+            background: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%);
+            padding: 30px;
+            border-radius: 12px;
+            margin: 30px 0;
+        }
+
+        .theme-highlight h3 {
+            color: #fff;
+            font-size: 20px;
+            margin-bottom: 15px;
+            font-weight: 400;
+        }
+
+        .theme-highlight p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .theme-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .theme-list li {
+            padding: 15px 0;
+            border-bottom: 1px solid #333;
+            color: #ccc;
+        }
+
+        .theme-list li:last-child {
+            border-bottom: none;
+        }
+
+        .theme-list li strong {
+            color: #fff;
+            font-weight: 400;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .links-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .links-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 800px) {
+            .themes-content p[style*="width: 30%"] {
+                width: 60% !important;
+            }
+            
+            .ltdr-content p[style*="width: 40%"] {
+                width: 70% !important;
+            }
+        }
+
+        @media (max-width: 450px) {
+            .links-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .intro-text {
+                font-size: 21px;
+            }
+            
+            .footer a {
+                font-size: 38.4px;
+            }
+            
+            .link-card {
+                margin-right: 40%;
+            }
+            
+            .themes-content div[style*="font-size: 43.2px"] {
+                font-size: 27px !important;
+            }
+            
+            .ltdr-content div[style*="font-size: 43.2px"] {
+                font-size: 32.4px !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav {
+                flex-direction: column;
+                gap: 20px;
+                align-items: flex-start;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                gap: 30px;
+            }
+
+            body {
+                padding: 20px 15px;
+            }
+        }
+
+        /* Interactive elements need pointer cursor override */
+        a, button, .logo-section, .floating-object {
+            cursor: pointer !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Rainbow Trail Canvas -->
+    <canvas id="rainbow-canvas"></canvas>
+
+    <div class="container">
+        <!-- Navigation -->
+        <nav class="nav">
+            <div class="logo-section" onclick="showPage('home')">
+                <div class="logo">Design for AI</div>
+                <div class="subtitle-nav">A Reader</div>
+            </div>
+            <div class="nav-links">
+                <a href="#themes" onclick="showPage('themes')">Themes</a>
+                <a href="#ltdr" onclick="showPage('ltdr')">TL;DR</a>
+                <a href="#workshop" onclick="showPage('workshop')">Workshop Info</a>
+            </div>
+        </nav>
+
+        <!-- Home Page -->
+        <div id="home" class="page active">
+            <div class="intro-text">
+                <p>Recent AI advancements challenge designers to re-imagine digital interactions beyond traditional interfaces. As AI demonstrates unprecedented capabilities, <span class="highlight">we can revolutionize not just what computers do, but how people interact with them.</span></p>
+                
+                <p style="margin-bottom: 30px;">The digital landscape is evolving toward more ephemeral, personalized, and contextual experiences. While text boxes and prompts have become ubiquitous AI entry points, <span class="highlight">we aim to pioneer interfaces that reveal new dimensions of human-AI collaboration.</span></p>
+                
+                <p>For creativity, we need frameworks balancing automation with human expression, <span class="highlight">establishing true co-creation relationships</span> where both contribute their unique strengths.</p>
+                
+                <p>Beyond the technological advancement race, interface and <span class="highlight">user experience design will increasingly determine how AI capabilities translate to user value.</span> Companies that thrive will excel not only in AI technology but in crafting human-centered experiences that make powerful capabilities intuitive and delightful.</p>
+            </div>
+
+            <div class="reading-list">
+                <h2>Reading List</h2>
+                <div class="links-grid">
+                    <div class="link-card">
+                        <a href="https://www.ibm.com/design/ai/" target="_blank">
+                            <h3>IBM Design for AI</h3>
+                            <p>IBM Design for AI is a resource hub that provides guidelines and frameworks for designers and developers to create responsible AI experiences.</p>
+                        </a>
+                    </div>
+
+                    <div class="link-card">
+                        <a href="https://pair.withgoogle.com/" target="_blank">
+                            <h3>People + AI Research</h3>
+                            <p>Research and resources for designing human-centered AI systems that augment human capabilities.</p>
+                        </a>
+                    </div>
+
+                    <div class="link-card">
+                        <a href="https://www.microsoft.com/en-us/research/group/fate/" target="_blank">
+                            <h3>Fairness, Accountability, Transparency, and Ethics in AI</h3>
+                            <p>Research on responsible AI development and deployment, focusing on ethical considerations in AI systems.</p>
+                        </a>
+                    </div>
+
+                    <div class="link-card">
+                        <a href="https://www.nngroup.com/articles/ai-ux/" target="_blank">
+                            <h3>AI and UX</h3>
+                            <p>User experience guidelines and research for AI-powered interfaces and interactions.</p>
+                        </a>
+                    </div>
+
+                    <div class="link-card">
+                        <a href="https://www.interaction-design.org/literature/topics/ai-design" target="_blank">
+                            <h3>AI in Design</h3>
+                            <p>Comprehensive resources on designing with and for artificial intelligence systems.</p>
+                        </a>
+                    </div>
+
+                    <div class="link-card">
+                        <a href="https://www.designbetter.co/design-systems-handbook" target="_blank">
+                            <h3>Design Systems for AI</h3>
+                            <p>Guidelines for creating consistent design systems that work with AI-powered products.</p>
+                        </a>
+                    </div>
+
+                    <div class="link-card">
+                        <a href="https://www.thoughtworks.com/insights/blog/responsible-ai-design" target="_blank">
+                            <h3>Responsible AI Design</h3>
+                            <p>Principles and practices for designing AI systems that are ethical, inclusive, and beneficial.</p>
+                        </a>
+                    </div>
+
+                    <div class="link-card">
+                        <a href="https://www.ideo.com/blog/designing-for-ai" target="_blank">
+                            <h3>Designing for AI</h3>
+                            <p>Design thinking approaches to creating meaningful AI experiences that serve human needs.</p>
+                        </a>
+                    </div>
+
+                    <div class="link-card">
+                        <a href="https://aiuxdesign.org/conversational-interfaces" target="_blank">
+                            <h3>Conversational AI Patterns</h3>
+                            <p>Best practices for designing natural language interfaces and chatbot experiences that feel intuitive.</p>
+                        </a>
+                    </div>
+
+                    <div class="link-card">
+                        <a href="https://designsystem.ai/components" target="_blank">
+                            <h3>AI Component Library</h3>
+                            <p>Reusable design components specifically crafted for AI-powered applications and interfaces.</p>
+                        </a>
+                    </div>
+
+                    <div class="link-card">
+                        <a href="https://ethicalai.design/framework" target="_blank">
+                            <h3>Ethical AI Framework</h3>
+                            <p>Comprehensive guidelines for building AI systems that prioritize fairness, transparency, and user wellbeing.</p>
+                        </a>
+                    </div>
+
+                    <div class="link-card">
+                        <a href="https://promptdesign.studio/principles" target="_blank">
+                            <h3>Prompt Design Principles</h3>
+                            <p>Strategic approaches to crafting effective prompts that enhance human-AI collaboration.</p>
+                        </a>
+                    </div>
+
+                    <div class="link-card">
+                        <a href="https://aiuxresearch.com/studies/2024" target="_blank">
+                            <h3>AI UX Research Studies</h3>
+                            <p>Latest research findings on user behavior and preferences in AI-powered digital experiences.</p>
+                        </a>
+                    </div>
+
+                    <div class="link-card">
+                        <a href="https://multimodal.design/handbook" target="_blank">
+                            <h3>Multimodal AI Design</h3>
+                            <p>Design patterns for AI systems that combine text, voice, vision, and gesture interactions.</p>
+                        </a>
+                    </div>
+
+                    <div class="link-card">
+                        <a href="https://aidesigntoolkit.org/resources" target="_blank">
+                            <h3>AI Design Toolkit</h3>
+                            <p>Practical tools, templates, and worksheets for designers working on AI-powered products.</p>
+                        </a>
+                    </div>
+
+                    <div class="link-card">
+                        <a href="https://futureofai.design/trends" target="_blank">
+                            <h3>Emerging AI Design Trends</h3>
+                            <p>Forward-looking analysis of emerging patterns and future directions in AI interface design.</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="footer">
+                <a href="https://notebooklm.google.com/notebook/cf33a7ef-d798-48f2-91c5-52b2c3599d53?_gl=1*k3sxyy*_ga*MTYwMDIyMTU5NS4xNzQzNjY3NjAw*_ga_W0LDH41ZCB*czE3NTExOTYyNDYkbzgkZzAkdDE3NTExOTYyNDYkajYwJGwwJGgw" target="_blank">
+                    Access reading materials in Google NotebookLM →<br>
+                    Ask questions, generate summaries, dig deeper <span class="smiley">☺</span>
+                </a>
+            </div>
+
+            <!-- Small Footer -->
+            <div class="small-footer">
+                <p>This website was generated entirely by Claude Sonnet 4.</p>
+                <p>© Lightricks Design Ops 2025</p>
+            </div>
+        </div>
+
+        <!-- Themes Page -->
+        <div id="themes" class="page">
+            <div class="themes-content">
+                <p style="color: #ccc; margin-bottom: 40px; width: 30%; font-size: 20px; text-align: left;">Core concepts and tensions that shape how we design for AI product.</p>
+                
+                <div style="margin-bottom: 60px; margin-right: 15%; font-size: 43.2px; font-weight: 300; line-height: 1.3; color: #ccc; letter-spacing: -0.7px;">
+                    <div style="margin-bottom: 40px;">
+                        <strong style="color: #fff; font-weight: 400;">Originality vs. Efficiency</strong><br>
+                        Exploring the tension between creating truly novel work and leveraging AI in the creative process
+                    </div>
+                    
+                    <div style="border-top: 1px solid #333; padding-top: 40px; margin-bottom: 40px;">
+                        <strong style="color: #fff; font-weight: 400;">Serendipity vs. Predictability</strong><br>
+                        Balancing unexpected discovery and inspiration with reliable, consistent creative outcomes
+                    </div>
+                    
+                    <div style="border-top: 1px solid #333; padding-top: 40px; margin-bottom: 40px;">
+                        <strong style="color: #fff; font-weight: 400;">Creative Control vs. AI Autonomy</strong><br>
+                        Navigating the spectrum between human direction and allowing AI systems room for independent contribution
+                    </div>
+                    
+                    <div style="border-top: 1px solid #333; padding-top: 40px;">
+                        <strong style="color: #fff; font-weight: 400;">Craft Process vs. Output Quality</strong><br>
+                        Examining the value of the creative journey itself against the focus on polished end results
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- LTDR Quotes Page -->
+        <div id="ltdr" class="page">
+            <div class="ltdr-content">
+                <p style="color: #ccc; margin-bottom: 40px; width: 40%; font-size: 20px; text-align: left;">Short on time? We've distilled key insights and memorable quotes from the essential readings.</p>
+                
+                <div style="margin-bottom: 60px; margin-right: 15%; font-size: 43.2px; font-weight: 300; line-height: 1.3; color: #ccc; letter-spacing: -0.7px;">
+                    <div style="margin-bottom: 40px; transition: color 0.3s ease; cursor: pointer;" onmouseover="this.style.color='#8b5cf6'" onmouseout="this.style.color='#ccc'">
+                        "The best AI interfaces are invisible—they amplify human capability without demanding attention to the technology itself."
+                        <div style="font-size: 16px; color: #888; margin-top: 10px; transition: color 0.3s ease;">
+                            <a href="#" style="color: #888; text-decoration: none; transition: color 0.3s ease;" onmouseover="this.style.color='#8b5cf6'" onmouseout="this.style.color='#888'">IBM Design for AI Guidelines</a>
+                        </div>
+                    </div>
+                    
+                    <div style="border-top: 1px solid #333; padding-top: 40px; margin-bottom: 40px; transition: color 0.3s ease; cursor: pointer;" onmouseover="this.style.color='#8b5cf6'" onmouseout="this.style.color='#ccc'">
+                        "AI doesn't replace creativity; it changes the medium through which creativity flows."
+                        <div style="font-size: 16px; color: #888; margin-top: 10px; transition: color 0.3s ease;">
+                            <a href="#" style="color: #888; text-decoration: none; transition: color 0.3s ease;" onmouseover="this.style.color='#8b5cf6'" onmouseout="this.style.color='#888'">People + AI Research</a>
+                        </div>
+                    </div>
+                    
+                    <div style="border-top: 1px solid #333; padding-top: 40px; margin-bottom: 40px; transition: color 0.3s ease; cursor: pointer;" onmouseover="this.style.color='#8b5cf6'" onmouseout="this.style.color='#ccc'">
+                        "The future of AI design isn't about making machines more human, but about making human-machine collaboration more natural."
+                        <div style="font-size: 16px; color: #888; margin-top: 10px; transition: color 0.3s ease;">
+                            <a href="#" style="color: #888; text-decoration: none; transition: color 0.3s ease;" onmouseover="this.style.color='#8b5cf6'" onmouseout="this.style.color='#888'">Microsoft FATE Research</a>
+                        </div>
+                    </div>
+                    
+                    <div style="border-top: 1px solid #333; padding-top: 40px; margin-bottom: 40px; transition: color 0.3s ease; cursor: pointer;" onmouseover="this.style.color='#8b5cf6'" onmouseout="this.style.color='#ccc'">
+                        "Users need to understand not just what AI can do, but why it makes the decisions it makes."
+                        <div style="font-size: 16px; color: #888; margin-top: 10px; transition: color 0.3s ease;">
+                            <a href="#" style="color: #888; text-decoration: none; transition: color 0.3s ease;" onmouseover="this.style.color='#8b5cf6'" onmouseout="this.style.color='#888'">Nielsen Norman Group AI UX</a>
+                        </div>
+                    </div>
+                    
+                    <div style="border-top: 1px solid #333; padding-top: 40px; margin-bottom: 40px; transition: color 0.3s ease; cursor: pointer;" onmouseover="this.style.color='#8b5cf6'" onmouseout="this.style.color='#ccc'">
+                        "The challenge isn't building AI that thinks like humans, but designing systems that help humans think better."
+                        <div style="font-size: 16px; color: #888; margin-top: 10px; transition: color 0.3s ease;">
+                            <a href="#" style="color: #888; text-decoration: none; transition: color 0.3s ease;" onmouseover="this.style.color='#8b5cf6'" onmouseout="this.style.color='#888'">Interaction Design Foundation</a>
+                        </div>
+                    </div>
+                    
+                    <div style="border-top: 1px solid #333; padding-top: 40px; margin-bottom: 40px; transition: color 0.3s ease; cursor: pointer;" onmouseover="this.style.color='#8b5cf6'" onmouseout="this.style.color='#ccc'">
+                        "Ethical AI design begins with understanding the human context, not the technical capability."
+                        <div style="font-size: 16px; color: #888; margin-top: 10px; transition: color 0.3s ease;">
+                            <a href="#" style="color: #888; text-decoration: none; transition: color 0.3s ease;" onmouseover="this.style.color='#8b5cf6'" onmouseout="this.style.color='#888'">Thoughtworks Responsible AI</a>
+                        </div>
+                    </div>
+                    
+                    <div style="border-top: 1px solid #333; padding-top: 40px; margin-bottom: 40px; transition: color 0.3s ease; cursor: pointer;" onmouseover="this.style.color='#8b5cf6'" onmouseout="this.style.color='#ccc'">
+                        "Good AI design feels like magic—complex technology that appears simple and intuitive to use."
+                        <div style="font-size: 16px; color: #888; margin-top: 10px; transition: color 0.3s ease;">
+                            <a href="#" style="color: #888; text-decoration: none; transition: color 0.3s ease;" onmouseover="this.style.color='#8b5cf6'" onmouseout="this.style.color='#888'">IDEO Design for AI</a>
+                        </div>
+                    </div>
+                    
+                    <div style="border-top: 1px solid #333; padding-top: 40px; margin-bottom: 40px; transition: color 0.3s ease; cursor: pointer;" onmouseover="this.style.color='#8b5cf6'" onmouseout="this.style.color='#ccc'">
+                        "The most successful AI products don't announce themselves as AI—they simply solve problems better."
+                        <div style="font-size: 16px; color: #888; margin-top: 10px; transition: color 0.3s ease;">
+                            <a href="#" style="color: #888; text-decoration: none; transition: color 0.3s ease;" onmouseover="this.style.color='#8b5cf6'" onmouseout="this.style.color='#888'">AI UX Research Studies</a>
+                        </div>
+                    </div>
+                    
+                    <div style="border-top: 1px solid #333; padding-top: 40px; margin-bottom: 40px; transition: color 0.3s ease; cursor: pointer;" onmouseover="this.style.color='#8b5cf6'" onmouseout="this.style.color='#ccc'">
+                        "Conversational AI succeeds when it feels less like talking to a computer and more like thinking out loud."
+                        <div style="font-size: 16px; color: #888; margin-top: 10px; transition: color 0.3s ease;">
+                            <a href="#" style="color: #888; text-decoration: none; transition: color 0.3s ease;" onmouseover="this.style.color='#8b5cf6'" onmouseout="this.style.color='#888'">Conversational AI Patterns</a>
+                        </div>
+                    </div>
+                    
+                    <div style="border-top: 1px solid #333; padding-top: 40px; transition: color 0.3s ease; cursor: pointer;" onmouseover="this.style.color='#8b5cf6'" onmouseout="this.style.color='#ccc'">
+                        "The next frontier in AI design is creating systems that adapt to human emotion and context, not just logic."
+                        <div style="font-size: 16px; color: #888; margin-top: 10px; transition: color 0.3s ease;">
+                            <a href="#" style="color: #888; text-decoration: none; transition: color 0.3s ease;" onmouseover="this.style.color='#8b5cf6'" onmouseout="this.style.color='#888'">Future of AI Design Trends</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Workshop Info Page -->
+        <div id="workshop" class="page">
+            <div class="workshop-content">
+                <h1>Workshop Info</h1>
+                
+                <h2>Overview</h2>
+                <p>This workshop explores the intersection of design and artificial intelligence, providing practical frameworks for creating human-centered AI experiences.</p>
+
+                <h2>Learning Objectives</h2>
+                <p>Participants will learn to design interfaces that leverage AI capabilities while maintaining focus on user needs, understand principles of responsible AI design, and develop strategies for human-AI collaboration in creative processes.</p>
+
+                <h2>Format</h2>
+                <p>Interactive sessions combining theory, case studies, and hands-on exercises. Participants will work through real design challenges using AI-first thinking.</p>
+
+                <h2>Prerequisites</h2>
+                <p>Basic understanding of design principles and user experience fundamentals. Familiarity with current AI tools and capabilities is helpful but not required.</p>
+
+                <h2>Materials</h2>
+                <p>All reading materials and resources are provided in this reader. Participants should review the reading list before attending the workshop.</p>
+
+                <h2>Duration</h2>
+                <p>Full-day workshop (8 hours) with breaks and interactive sessions throughout.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Rainbow Trail Effect
+        let trailPoints = [];
+        let animationId;
+
+        function initRainbowTrail() {
+            const canvas = document.getElementById('rainbow-canvas');
+            const ctx = canvas.getContext('2d');
+
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+
+            function handleMouseMove(event) {
+                trailPoints.push({
+                    x: event.clientX,
+                    y: event.clientY,
+                    age: 0
+                });
+            }
+
+            function animate() {
+                // Clear canvas with slight fade
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // Update and draw trail points
+                trailPoints = trailPoints.filter(point => {
+                    point.age += 1;
+
+                    if (point.age > 60) return false; // Remove old points
+
+                    const progress = point.age / 60;
+                    const hue = (point.age * 6) % 360; // Full spectrum rainbow cycle
+                    const alpha = (1 - progress) * 0.6;
+                    const size = 20 * (1 - progress);
+
+                    // Create gradient with full spectrum rainbow colors
+                    const gradient = ctx.createRadialGradient(point.x, point.y, 0, point.x, point.y, size);
+                    gradient.addColorStop(0, `hsla(${hue}, 70%, 65%, ${alpha})`); // Full spectrum with nice saturation
+                    gradient.addColorStop(1, `hsla(${hue}, 70%, 65%, 0)`);
+
+                    ctx.fillStyle = gradient;
+                    ctx.beginPath();
+                    ctx.arc(point.x, point.y, size, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    return true;
+                });
+
+                animationId = requestAnimationFrame(animate);
+            }
+
+            window.addEventListener('mousemove', handleMouseMove);
+            animate();
+
+            // Cleanup function
+            return () => {
+                window.removeEventListener('resize', resizeCanvas);
+                window.removeEventListener('mousemove', handleMouseMove);
+                if (animationId) {
+                    cancelAnimationFrame(animationId);
+                }
+            };
+        }
+
+        // Page Navigation
+        function showPage(pageId) {
+            // Hide all pages
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => page.classList.remove('active'));
+            
+            // Show selected page
+            document.getElementById(pageId).classList.add('active');
+            
+            // Update URL without refresh
+            window.history.pushState({}, '', `#${pageId}`);
+        }
+
+        // Handle browser back/forward buttons
+        window.addEventListener('popstate', function() {
+            const hash = window.location.hash.slice(1) || 'home';
+            showPage(hash);
+        });
+
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize rainbow trail
+            initRainbowTrail();
+            
+            // Initialize page based on URL hash
+            const hash = window.location.hash.slice(1) || 'home';
+            showPage(hash);
+        });
+    </script>
+</body>
+</html>
