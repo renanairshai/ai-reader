@@ -90,6 +90,12 @@
       target.classList.add("active");
     }
 
+    /* Mark current nav link so the underline stays to show where you are */
+    const navLinks = document.querySelectorAll(".nav-links a[data-page]");
+    navLinks.forEach(function (a) {
+      a.classList.toggle("nav-current", a.getAttribute("data-page") === pageId);
+    });
+
     window.history.pushState({}, "", "#" + pageId);
   }
 
@@ -153,6 +159,13 @@
     let rotY = 45;
     let animId = null;
     let cursorHasMoved = false;
+    /* Momentum: velocity (deg/frame) and previous rotation for delta */
+    let velX = 0;
+    let velY = 0;
+    let prevRotX = rotX;
+    let prevRotY = rotY;
+    var momentumDecay = 0.92;
+    var momentumMin = 0.08;
 
     function applyCubeTransform() {
       if (!themesPage.classList.contains("active")) return;
@@ -184,12 +197,29 @@
     }
 
     function tick() {
+      if (themesPage.classList.contains("active")) {
+        if (isDragging) {
+          velX = rotX - prevRotX;
+          velY = rotY - prevRotY;
+        } else {
+          rotX += velX;
+          rotY += velY;
+          velX *= momentumDecay;
+          velY *= momentumDecay;
+          if (Math.abs(velX) < momentumMin) velX = 0;
+          if (Math.abs(velY) < momentumMin) velY = 0;
+        }
+        prevRotX = rotX;
+        prevRotY = rotY;
+      }
       applyCubeTransform();
       animId = requestAnimationFrame(tick);
     }
 
     function startDrag(clientX, clientY) {
       isDragging = true;
+      velX = 0;
+      velY = 0;
       document.body.classList.add("cube-dragging");
       lastMouseX = clientX;
       lastMouseY = clientY;

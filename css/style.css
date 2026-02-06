@@ -248,6 +248,22 @@ body.tension-view .themes-gradient-overlay {
   box-shadow: 0 0 6px 2px rgba(0, 0, 0, 0.35);
 }
 
+/* Current page: underline stays visible to mark where you are.
+   Delay only on "return" (when no link is hovered), so we don’t bring the line back until we’re sure the user isn’t moving to another button. */
+.nav-links a.nav-current::after {
+  width: 100%;
+  background: var(--rainbow-hover);
+  background-size: 100% 100%;
+  box-shadow: 0 0 6px 2px rgba(0, 0, 0, 0.35);
+  transition: width 0.22s ease-out 0.4s, background 0.3s ease 0.15s;
+}
+
+/* When hovering a different link, revert the current page's underline immediately (no delay). */
+.nav-links:has(a:hover) .nav-current:not(:hover)::after {
+  width: 0;
+  transition: width 0.22s ease-out 0s, background 0.3s ease 0.15s;
+}
+
 /* --------------------------------------------------------------------------
    Page visibility (single-page app style)
    -------------------------------------------------------------------------- */
@@ -643,15 +659,26 @@ body.tension-view .nav .logo-section:active .subtitle-nav {
   color: #fff;
 }
 
-/* Tension view: underline draws white then gradient (fits light background) */
+/* Tension view: underline draws; gradient background uses currentColor, no blur */
 body.tension-view .nav-links a::after {
-  background: #fff;
-  box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.2);
+  background: currentColor;
+  box-shadow: none;
 }
 body.tension-view .nav-links a:hover::after,
 body.tension-view .nav-links a:active::after {
-  background: var(--rainbow-hover);
-  box-shadow: 0 0 6px 2px rgba(0, 0, 0, 0.25);
+  background: currentColor;
+  box-shadow: none;
+}
+body.tension-view .nav-links a.nav-current::after {
+  width: 100%;
+  background: currentColor;
+  box-shadow: none;
+  transition: width 0.22s ease-out 0.4s, background 0.3s ease 0.15s;
+}
+/* When hovering a different link in tension view, revert immediately. */
+body.tension-view .nav-links:has(a:hover) .nav-current:not(:hover)::after {
+  width: 0;
+  transition: width 0.22s ease-out 0s, background 0.3s ease 0.15s;
 }
 
 body.tension-view .cube-tension-title {
