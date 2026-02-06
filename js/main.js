@@ -39,9 +39,9 @@
 
       trailPoints = trailPoints.filter(function (point) {
         point.age += 1;
-        if (point.age > 60) return false;
+        if (point.age > 28) return false;
 
-        const progress = point.age / 60;
+        const progress = point.age / 28;
         const alpha = (1 - progress) * 0.6;
         const size = 20 * (1 - progress);
 
