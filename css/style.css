@@ -54,6 +54,19 @@
     hsl(300, 70%, 65%) 94%,
     hsl(360, 70%, 65%) 100%
   );
+  /* Diagonal wash for highlight cards (top-left to bottom-right) */
+  --rainbow-wash-ltdr: linear-gradient(
+    135deg,
+    var(--color-text-muted) 0%,
+    var(--color-text-muted) 45%,
+    hsl(0, 70%, 65%) 48%,
+    hsl(45, 70%, 65%) 58%,
+    hsl(120, 70%, 65%) 68%,
+    hsl(180, 70%, 65%) 78%,
+    hsl(240, 70%, 65%) 86%,
+    hsl(300, 70%, 65%) 92%,
+    hsl(360, 70%, 65%) 100%
+  );
   --rainbow-wash-footer: linear-gradient(
     90deg,
     #e8e8e8 0%,
@@ -553,6 +566,7 @@ body.tension-view .themes-gradient-overlay {
 #themes .themes-intro-bottom {
   margin-top: var(--spacing-section);
   margin-bottom: 0;
+  opacity: 0.8;
 }
 
 /* Tension view: cube 60% smaller, top-right under menu; hide intro/bottom; show back link */
@@ -797,17 +811,20 @@ body.tension-view .tension-content-title {
 
 .ltdr-intro {
   color: var(--color-text-muted);
-  margin-bottom: 3rem;
+  font-weight: var(--font-weight-light);
+  font-size: 20px;
   width: 40%;
   max-width: 420px;
-  font-size: 20px;
+  letter-spacing: 0.2px;
+  margin: 0 0 3rem 0;
+  padding: 0;
   text-align: left;
 }
 
 .ltdr-cards-stack {
   position: relative;
-  padding: 2rem 0 8rem;
-  min-height: 150vh;
+  padding: 2rem 0 0.75rem;
+  min-height: 130vh;
   perspective: 1200px;
   --cursor-tilt-x: 0deg;
   --cursor-tilt-y: 0deg;
@@ -866,12 +883,11 @@ body.tension-view .tension-content-title {
   user-select: none;
 }
 
-/* Rainbow text on card hover – quote only, not the source */
-/* Quote text: same wash as intro (rest → red…→red), sweeps on card hover */
+/* Rainbow text on card hover – quote only, diagonal gradient */
 .ltdr-card-quote {
-  background: var(--rainbow-wash-intro);
-  background-size: 200% 100%;
-  background-position: 0% 0;
+  background: var(--rainbow-wash-ltdr);
+  background-size: 220% 220%;
+  background-position: 0% 0%;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -880,7 +896,7 @@ body.tension-view .tension-content-title {
 }
 
 .ltdr-card:hover .ltdr-card-quote {
-  background-position: -100% 0;
+  background-position: -100% -100%;
 }
 
 .ltdr-card-quote {
@@ -904,6 +920,157 @@ body.tension-view .tension-content-title {
 
 .ltdr-card-source a:hover {
   text-decoration: underline;
+}
+
+/* --------------------------------------------------------------------------
+   Gallery: separate page only (never a section on other pages).
+   Layout and visibility only when this page is active.
+   -------------------------------------------------------------------------- */
+#gallery.gallery-page.page:not(.active) {
+  display: none !important;
+}
+
+#gallery.gallery-page.page.active {
+  background: #000;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 20rem;
+  overflow: hidden;
+}
+
+/* No left padding: align with logo (container already has padding-left) */
+.gallery-page-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 0 var(--spacing-page) 0 0;
+}
+
+/* Gallery intro: same place and position as Explore Themes intro text */
+#gallery .gallery-intro {
+  color: var(--color-text-muted);
+  font-weight: var(--font-weight-light);
+  font-size: 20px;
+  width: 30%;
+  max-width: 420px;
+  letter-spacing: 0.2px;
+  margin-bottom: var(--spacing-section);
+}
+
+#gallery .gallery-hint {
+  font-size: 15px;
+  color: var(--color-text-muted);
+  font-weight: var(--font-weight-light);
+  letter-spacing: 0.2px;
+  width: 30%;
+  max-width: 420px;
+  margin-top: var(--spacing-section);
+  margin-bottom: 0;
+  opacity: 0.8;
+}
+
+.gallery-scene {
+  flex: 1;
+  min-height: 70vh;
+  margin-top: calc(-8rem + 10px + 5vh);
+  padding: var(--spacing-section) var(--spacing-section) var(--spacing-section) 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 10;
+}
+
+.gallery-orbit {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  min-height: 55vh;
+  margin: 0 auto;
+  padding: 0 10px 0 20px;
+  box-sizing: border-box;
+  transform: scale(0.97);
+  transform-origin: center center;
+  perspective: 800px;
+}
+
+.gallery-card {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  /* width, height, margin set in JS from each image's aspect ratio */
+  min-width: 120px;
+  min-height: 96px;
+  margin-left: -60px;
+  margin-top: -48px;
+  background: #0a0a0a;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  pointer-events: auto;
+  cursor: pointer;
+  overflow: hidden;
+  --card-darken: 0;
+  --card-tilt-x: 0deg;
+  --card-tilt-y: 0deg;
+  transform-style: preserve-3d;
+}
+
+/* Darker overlay as cards move back (set in JS); front card stays bright */
+.gallery-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, var(--card-darken, 0));
+  border-radius: 15px;
+  pointer-events: none;
+}
+
+.gallery-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  border-radius: 15px;
+}
+
+/* Card size is set in JS from each image's aspect ratio */
+
+/* Full-size lightbox when clicking a gallery image */
+.gallery-lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+.gallery-lightbox.is-open {
+  display: flex;
+}
+
+.gallery-lightbox-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.9);
+  cursor: pointer;
+}
+
+.gallery-lightbox-img {
+  position: relative;
+  z-index: 1;
+  max-width: 90vw;
+  max-height: 90vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  cursor: pointer;
+  border-radius: 4px;
 }
 
 .quote-container {
@@ -1020,7 +1187,7 @@ body.cube-dragging {
   }
 
   .ltdr-intro {
-    width: 70% !important;
+    width: 60% !important;
   }
 }
 
