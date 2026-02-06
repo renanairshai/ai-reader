@@ -222,13 +222,30 @@ body.tension-view .themes-gradient-overlay {
   font-size: var(--font-size-nav);
   font-weight: var(--font-weight-light);
   letter-spacing: 0.3px;
-  transition: color 0.3s ease, background 0.3s ease, -webkit-background-clip 0.3s ease, background-clip 0.3s ease, opacity 0.3s ease;
+  transition: color 0.3s ease;
   cursor: pointer;
+  position: relative;
 }
 
-.nav-links a:hover,
-.nav-links a:active {
-  opacity: 0.8;
+/* Underline: 2px line, 4px below; draws in as black then quickly gets gradient */
+.nav-links a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  height: 2px;
+  width: 0;
+  background: #000;
+  box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.45);
+  transition: width 0.22s ease-out, background 0.3s ease 0.15s;
+}
+
+.nav-links a:hover::after,
+.nav-links a:active::after {
+  width: 100%;
+  background: var(--rainbow-hover);
+  background-size: 100% 100%;
+  box-shadow: 0 0 6px 2px rgba(0, 0, 0, 0.35);
 }
 
 /* --------------------------------------------------------------------------
@@ -626,13 +643,24 @@ body.tension-view .nav .logo-section:active .subtitle-nav {
   color: #fff;
 }
 
+/* Tension view: underline draws white then gradient (fits light background) */
+body.tension-view .nav-links a::after {
+  background: #fff;
+  box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.2);
+}
+body.tension-view .nav-links a:hover::after,
+body.tension-view .nav-links a:active::after {
+  background: var(--rainbow-hover);
+  box-shadow: 0 0 6px 2px rgba(0, 0, 0, 0.25);
+}
+
 body.tension-view .cube-tension-title {
   font-size: clamp(1.35rem, 7vmin, 2.25rem);
   line-height: 1.3;
 }
 
 body.tension-view .cube-face {
-  border-width: 1px;
+  box-shadow: inset 0 0 0.75px 1.5px #fff;
 }
 
 body.tension-view .cube-face-inner {
@@ -726,7 +754,8 @@ body.tension-view .tension-content-title {
   width: 100%;
   height: 100%;
   background: #000;
-  border: 1.5px solid #fff;
+  /* Inset box-shadow with slight blur for a softer edge on the cube lines */
+  box-shadow: inset 0 0 1px 2px #fff;
   display: flex;
   align-items: center;
   justify-content: center;
