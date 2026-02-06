@@ -127,6 +127,14 @@
     const wrap = document.getElementById("themes-cube-wrap");
     if (!cube || !scene || !themesPage || !wrap) return;
 
+    /* Store original tension titles so we can restore them when leaving tension view (all 6 faces) */
+    var cubeFaceNames = ["front", "back", "left", "right", "top", "bottom"];
+    var originalCubeTitles = {};
+    cubeFaceNames.forEach(function (f) {
+      var el = cube.querySelector(".face-" + f + " .cube-tension-title");
+      if (el) originalCubeTitles[f] = el.innerHTML;
+    });
+
     /* When the cursor is over the cube, clear any text selection so the cube doesn't "relate" to the text */
     wrap.addEventListener("mouseenter", function () {
       var sel = window.getSelection();
@@ -234,6 +242,13 @@
           if (wrap && wrap.parentNode !== document.body) {
             document.body.appendChild(wrap);
           }
+          /* Show only the clicked tension’s text on all four faces of the small cube */
+          var clickedTitleEl = cube.querySelector(".face-" + face + " .cube-tension-title");
+          var clickedTitleHtml = clickedTitleEl ? clickedTitleEl.innerHTML : "";
+          cubeFaceNames.forEach(function (f) {
+            var titleEl = cube.querySelector(".face-" + f + " .cube-tension-title");
+            if (titleEl) titleEl.innerHTML = clickedTitleHtml;
+          });
           var panel = document.getElementById("tension-content-panel");
           if (panel) {
             var contents = panel.querySelectorAll(".tension-content");
@@ -254,6 +269,11 @@
     const origShowPage = showPage;
     function exitTensionView() {
       document.body.classList.remove("tension-view");
+      /* Restore original tension title on each face so the big cube shows all four again */
+      cubeFaceNames.forEach(function (f) {
+        var titleEl = cube.querySelector(".face-" + f + " .cube-tension-title");
+        if (titleEl && originalCubeTitles[f] !== undefined) titleEl.innerHTML = originalCubeTitles[f];
+      });
       var wrap = document.getElementById("themes-cube-wrap");
       var scene = document.getElementById("themes-scene");
       if (wrap && scene && wrap.parentNode === document.body) {
@@ -292,11 +312,107 @@
   }
 
   /* --------------------------------------------------------------------------
+     TL;DR cards: cursor-follow tilt (subtle 3D as mouse moves)
+     -------------------------------------------------------------------------- */
+  function initLtdrCardsTilt() {
+    var ltdrPage = document.getElementById("ltdr");
+    var stack = ltdrPage && ltdrPage.querySelector(".ltdr-cards-stack");
+    if (!stack) return;
+
+    var mouseX = window.innerWidth / 2;
+    var mouseY = window.innerHeight / 2;
+
+    window.addEventListener("mousemove", function (e) {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+
+    function tick() {
+      if (!ltdrPage || !ltdrPage.classList.contains("active")) {
+        requestAnimationFrame(tick);
+        return;
+      }
+      var cx = window.innerWidth / 2;
+      var cy = window.innerHeight / 2;
+      var nx = (mouseX - cx) / Math.max(cx, 1);
+      var ny = (mouseY - cy) / Math.max(cy, 1);
+      var tiltY = nx * 16;
+      var tiltX = -ny * 16;
+      stack.style.setProperty("--cursor-tilt-x", tiltX + "deg");
+      stack.style.setProperty("--cursor-tilt-y", tiltY + "deg");
+      requestAnimationFrame(tick);
+    }
+    tick();
+  }
+
+  /* --------------------------------------------------------------------------
+     TL;DR cards: drag and drop to reposition
+     -------------------------------------------------------------------------- */
+  function initLtdrCardsDrag() {
+    var stack = document.querySelector("#ltdr .ltdr-cards-stack");
+    var cards = document.querySelectorAll("#ltdr .ltdr-card");
+    if (!stack || !cards.length) return;
+
+    /* So CSS positions (e.g. nth-child) always apply on load; drag can leave inline left/top */
+    cards.forEach(function (card) {
+      card.style.left = "";
+      card.style.top = "";
+    });
+
+    var dragging = null;
+    var startX = 0;
+    var startY = 0;
+    var startLeft = 0;
+    var startTop = 0;
+
+    function onMouseDown(e) {
+      if (e.button !== 0 || dragging) return;
+      var card = e.target.closest(".ltdr-card");
+      if (!card) return;
+      e.preventDefault();
+      var cr = card.getBoundingClientRect();
+      var sr = stack.getBoundingClientRect();
+      dragging = card;
+      startX = e.clientX;
+      startY = e.clientY;
+      startLeft = cr.left - sr.left + stack.scrollLeft;
+      startTop = cr.top - sr.top + stack.scrollTop;
+      card.classList.add("is-dragging");
+      card.style.left = startLeft + "px";
+      card.style.top = startTop + "px";
+      window.addEventListener("mousemove", onMouseMove);
+      window.addEventListener("mouseup", onMouseUp);
+    }
+
+    function onMouseMove(e) {
+      if (!dragging) return;
+      var dx = e.clientX - startX;
+      var dy = e.clientY - startY;
+      dragging.style.left = (startLeft + dx) + "px";
+      dragging.style.top = (startTop + dy) + "px";
+    }
+
+    function onMouseUp() {
+      if (!dragging) return;
+      dragging.classList.remove("is-dragging");
+      dragging = null;
+      window.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("mouseup", onMouseUp);
+    }
+
+    cards.forEach(function (card) {
+      card.addEventListener("mousedown", onMouseDown);
+    });
+  }
+
+  /* --------------------------------------------------------------------------
      Initialize when the DOM is ready
      -------------------------------------------------------------------------- */
   function init() {
     initRainbowTrail();
     initNavigation();
+    initLtdrCardsTilt();
+    initLtdrCardsDrag();
     initThemesCube();
     showPage(getPageFromHash());
   }

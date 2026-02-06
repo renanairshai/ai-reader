@@ -28,6 +28,44 @@
     hsl(300, 70%, 65%),
     hsl(360, 70%, 65%)
   );
+  /* Wash gradient: rest color left half, rainbow right half – animate background-position for “washing” effect */
+  --rainbow-wash-intro: linear-gradient(
+    90deg,
+    var(--color-text-muted) 0%,
+    var(--color-text-muted) 50%,
+    hsl(350, 45%, 52%) 52%,
+    hsl(25, 55%, 58%) 58%,
+    hsl(45, 70%, 65%) 65%,
+    hsl(120, 70%, 65%) 70%,
+    hsl(180, 70%, 65%) 80%,
+    hsl(240, 70%, 65%) 88%,
+    hsl(300, 70%, 65%) 94%,
+    hsl(360, 70%, 65%) 100%
+  );
+  --rainbow-wash-card: linear-gradient(
+    90deg,
+    #e8e8e8 0%,
+    #e8e8e8 50%,
+    hsl(0, 70%, 65%) 52%,
+    hsl(45, 70%, 65%) 60%,
+    hsl(120, 70%, 65%) 70%,
+    hsl(180, 70%, 65%) 80%,
+    hsl(240, 70%, 65%) 88%,
+    hsl(300, 70%, 65%) 94%,
+    hsl(360, 70%, 65%) 100%
+  );
+  --rainbow-wash-footer: linear-gradient(
+    90deg,
+    #e8e8e8 0%,
+    #e8e8e8 50%,
+    hsl(0, 70%, 65%) 52%,
+    hsl(45, 70%, 65%) 60%,
+    hsl(120, 70%, 65%) 70%,
+    hsl(180, 70%, 65%) 80%,
+    hsl(240, 70%, 65%) 88%,
+    hsl(300, 70%, 65%) 94%,
+    hsl(360, 70%, 65%) 100%
+  );
 
   --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-size-intro: 28px;
@@ -88,7 +126,7 @@ body {
   z-index: 0;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.6s ease;
+  transition: opacity 1.6s cubic-bezier(0.22, 1, 0.36, 1) 0.12s;
 }
 
 body.tension-view .themes-gradient-overlay {
@@ -141,7 +179,7 @@ body.tension-view .themes-gradient-overlay {
   font-weight: var(--font-weight-light);
   letter-spacing: var(--letter-spacing-tight);
   margin-bottom: -12px;
-  transition: color 0.3s ease, background 0.3s ease, -webkit-background-clip 0.3s ease, background-clip 0.3s ease;
+  transition: color 0.3s ease, background 0.3s ease, -webkit-background-clip 0.3s ease, background-clip 0.3s ease, opacity 0.3s ease;
 }
 
 .subtitle-nav {
@@ -149,18 +187,14 @@ body.tension-view .themes-gradient-overlay {
   font-size: var(--font-size-intro);
   font-weight: var(--font-weight-light);
   letter-spacing: var(--letter-spacing-tight);
-  transition: color 0.3s ease, background 0.3s ease, -webkit-background-clip 0.3s ease, background-clip 0.3s ease;
+  transition: color 0.3s ease, background 0.3s ease, -webkit-background-clip 0.3s ease, background-clip 0.3s ease, opacity 0.3s ease;
 }
 
 .nav .logo-section:hover .logo,
 .nav .logo-section:hover .subtitle-nav,
 .nav .logo-section:active .logo,
 .nav .logo-section:active .subtitle-nav {
-  background: var(--rainbow-hover);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
+  opacity: 0.8;
 }
 
 .nav-links {
@@ -175,17 +209,13 @@ body.tension-view .themes-gradient-overlay {
   font-size: var(--font-size-nav);
   font-weight: var(--font-weight-light);
   letter-spacing: 0.3px;
-  transition: color 0.3s ease, background 0.3s ease, -webkit-background-clip 0.3s ease, background-clip 0.3s ease;
+  transition: color 0.3s ease, background 0.3s ease, -webkit-background-clip 0.3s ease, background-clip 0.3s ease, opacity 0.3s ease;
   cursor: pointer;
 }
 
 .nav-links a:hover,
 .nav-links a:active {
-  background: var(--rainbow-hover);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
+  opacity: 0.8;
 }
 
 /* --------------------------------------------------------------------------
@@ -212,17 +242,20 @@ body.tension-view .themes-gradient-overlay {
   letter-spacing: var(--letter-spacing-tight);
 }
 
+/* Wash: gradient slides left so rainbow moves from beginning to end of text */
 .intro-text .highlight {
-  transition: color 0.35s ease, background 0.35s ease, -webkit-background-clip 0.35s ease, background-clip 0.35s ease;
-}
-
-/* Rainbow gradient (cursor trail spectrum) on hover */
-.intro-text p:hover .highlight {
-  background: var(--rainbow-hover);
+  background: var(--rainbow-wash-intro);
+  background-size: 200% 100%;
+  background-position: 0% 0;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
+  transition: background-position 1s cubic-bezier(0.25, 0.46, 0.45, 0.94), -webkit-background-clip 0.35s ease, background-clip 0.35s ease;
+}
+
+.intro-text p:hover .highlight {
+  background-position: -100% 0;
 }
 
 /* Fallback when gradient text isn’t supported: solid purple */
@@ -230,9 +263,7 @@ body.tension-view .themes-gradient-overlay {
   .intro-text p:hover .highlight,
   .link-card:hover h3,
   .footer a:hover,
-  .quote-block:hover,
-  .quote-block:hover .quote-block-source,
-  .quote-block:hover .quote-block-source a,
+  .ltdr-card:hover .ltdr-card-quote,
   .nav-links a:hover,
   .nav-links a:active,
   .nav .logo-section:hover .logo,
@@ -369,25 +400,29 @@ body.tension-view .themes-gradient-overlay {
   transition: all 0.3s ease;
 }
 
-.link-card:hover h3 {
-  background: var(--rainbow-hover);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
-}
-
-.link-card:hover p {
-  color: var(--color-text-muted);
-}
-
+/* Same wash effect on reading list card titles */
 .link-card h3 {
   color: var(--color-text);
   font-size: var(--font-size-card-title);
   font-weight: var(--font-weight-normal);
   margin-bottom: 6px;
   letter-spacing: -0.2px;
-  transition: color 0.3s ease, background 0.3s ease, -webkit-background-clip 0.3s ease, background-clip 0.3s ease;
+  background: var(--rainbow-wash-card);
+  background-size: 200% 100%;
+  background-position: 0% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  transition: background-position 0.85s cubic-bezier(0.25, 0.46, 0.45, 0.94), -webkit-background-clip 0.35s ease, background-clip 0.35s ease;
+}
+
+.link-card:hover h3 {
+  background-position: -100% 0;
+}
+
+.link-card:hover p {
+  color: var(--color-text-muted);
 }
 
 .link-card p {
@@ -422,18 +457,21 @@ body.tension-view .themes-gradient-overlay {
   font-weight: var(--font-weight-light);
   letter-spacing: -1.2px;
   line-height: 1.1;
-  transition: color 0.3s ease, background 0.3s ease, -webkit-background-clip 0.3s ease, background-clip 0.3s ease;
   display: block;
   text-align: left;
   cursor: pointer;
-}
-
-.footer a:hover {
-  background: var(--rainbow-hover);
+  background: var(--rainbow-wash-footer);
+  background-size: 200% 100%;
+  background-position: 0% 0;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
+  transition: background-position 1s cubic-bezier(0.25, 0.46, 0.45, 0.94), -webkit-background-clip 0.35s ease, background-clip 0.35s ease;
+}
+
+.footer a:hover {
+  background-position: -100% 0;
 }
 
 .footer a .smiley {
@@ -527,19 +565,20 @@ body.tension-view #themes .themes-intro-bottom {
   display: contents;
 }
 
-/* Cube is moved to body in JS so it stays fixed (sticky) when the user scrolls */
+/* Cube is moved to body in JS so it stays fixed (sticky) when the user scrolls; ~15rem right of text (text is max 55% width) */
 body.tension-view .themes-cube-perspective-wrap {
   display: block;
   position: fixed;
-  top: 11rem;
-  right: 12rem;
+  top: calc(11rem + 7vh);
+  /* 15rem right of text, but never closer than 20px to the viewport right edge (cube visible width = 40vmin * 0.4 = 16vmin) */
+  left: min(calc(55% + 15rem), calc(100% - 20px - 16vmin));
   width: 40vmin;
   height: 40vmin;
   perspective: 600px;
   perspective-origin: 50% 50%;
   transform: scale(0.4);
-  transform-origin: 100% 0%;
-  transition: top 0.5s ease, right 0.5s ease, transform 0.5s ease;
+  transform-origin: 0% 0%;
+  transition: top 0.5s ease, left 0.5s ease, transform 0.5s ease;
   z-index: 10;
   pointer-events: none;
 }
@@ -574,7 +613,12 @@ body.tension-view .nav .logo-section:active .subtitle-nav {
 }
 
 body.tension-view .cube-tension-title {
-  font-size: clamp(0.975rem, 3.3vmin, 1.275rem);
+  font-size: clamp(1.35rem, 7vmin, 2.25rem);
+  line-height: 1.3;
+}
+
+body.tension-view .cube-face {
+  border-width: 1px;
 }
 
 body.tension-view .cube-face-inner {
@@ -644,7 +688,7 @@ body.tension-view .tension-content-title {
   align-items: center;
   justify-content: center;
   min-height: 70vh;
-  margin-top: calc(-8rem + 10px);
+  margin-top: calc(-8rem + 10px + 5vh);
   padding: var(--spacing-section);
   perspective: 800px;
   perspective-origin: 50% 50%;
@@ -668,7 +712,7 @@ body.tension-view .tension-content-title {
   width: 100%;
   height: 100%;
   background: #000;
-  border: 2px solid #fff;
+  border: 1.5px solid #fff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -745,82 +789,121 @@ body.tension-view .tension-content-title {
 }
 
 /* --------------------------------------------------------------------------
-   TL;DR page - intro and quote blocks (replaces inline styles + hover JS)
+   TL;DR page - floating overlapping cards, vertical scroll, hover to front + rainbow text
    -------------------------------------------------------------------------- */
 .ltdr-content {
-  max-width: var(--max-width-content);
-}
-
-.ltdr-content h1 {
-  font-size: 32px;
-  margin-bottom: 20px;
+  max-width: var(--max-width-container);
 }
 
 .ltdr-intro {
   color: var(--color-text-muted);
-  margin-bottom: 40px;
+  margin-bottom: 3rem;
   width: 40%;
+  max-width: 420px;
   font-size: 20px;
   text-align: left;
 }
 
-.ltdr-quote-list {
-  margin-bottom: 60px;
-  margin-right: 15%;
-  font-size: 43.2px;
+.ltdr-cards-stack {
+  position: relative;
+  padding: 2rem 0 8rem;
+  min-height: 150vh;
+  perspective: 1200px;
+  --cursor-tilt-x: 0deg;
+  --cursor-tilt-y: 0deg;
+}
+
+/* Floating overlapping cards: black, randomly placed, bobbing + cursor-follow 3D */
+.ltdr-card {
+  position: absolute;
+  width: 42%;
+  max-width: 320px;
+  min-height: 200px;
+  padding: 2rem 1.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 8px;
+  background: #000;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  --card-z: 0;
+  /* --card-z is animated by Motion (js/ltdr-card-motion.js) for smooth spring hover */
+  transition: z-index 0.2s step-end, border-color 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+    background 0.35s ease, -webkit-background-clip 0.35s ease, background-clip 0.35s ease;
+  cursor: grab;
+  animation: ltdr-bob 4s ease-in-out infinite;
+  animation-delay: var(--card-delay, 0s);
+}
+
+@keyframes ltdr-bob {
+  0%, 100% { transform: translateY(0) translateZ(var(--card-z, 0)) rotateX(var(--cursor-tilt-x)) rotateY(var(--cursor-tilt-y)); }
+  50% { transform: translateY(-8px) translateZ(var(--card-z, 0)) rotateX(var(--cursor-tilt-x)) rotateY(var(--cursor-tilt-y)); }
+}
+
+/* 3 rows, random and spaced across viewport width */
+.ltdr-card:nth-child(1)  { top: 2%;   left: 0%;   z-index: 1;  --card-delay: 0s; }
+.ltdr-card:nth-child(2)  { top: calc(4% + 3rem); left: 38%;  z-index: 2;  --card-delay: 0.4s; }
+.ltdr-card:nth-child(3)  { top: 0%;   left: 58%;  z-index: 3;  --card-delay: 0.8s; }
+.ltdr-card:nth-child(4)  { top: calc(8% + 6rem); left: 22%;  z-index: 4;  --card-delay: 0.2s; }
+.ltdr-card:nth-child(5)  { top: calc(33% - 3rem); left: 8%;   z-index: 5;  --card-delay: 0.6s; }
+.ltdr-card:nth-child(6)  { top: 35%;  left: calc(38% - 5rem); z-index: 6;  --card-delay: 0.1s; }
+.ltdr-card:nth-child(7)  { top: 29%;  left: 58%;  z-index: 7;  --card-delay: 0.5s; }
+.ltdr-card:nth-child(8)  { top: calc(57% - 6rem); left: 4%;   z-index: 8;  --card-delay: 0.9s; }
+.ltdr-card:nth-child(9)  { top: 54%;  left: 35%;  z-index: 9;  --card-delay: 0.3s; }
+.ltdr-card:nth-child(10) { top: 58%;  left: 58%;  z-index: 10; --card-delay: 0.7s; }
+
+/* Hovered card comes forward (--card-z set by Motion); visual feedback */
+.ltdr-card:hover {
+  z-index: 100;
+  border-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.ltdr-card.is-dragging {
+  cursor: grabbing;
+  z-index: 200;
+  animation: none;
+  user-select: none;
+}
+
+/* Rainbow text on card hover – quote only, not the source */
+/* Quote text: same wash as intro (rest → red…→red), sweeps on card hover */
+.ltdr-card-quote {
+  background: var(--rainbow-wash-intro);
+  background-size: 200% 100%;
+  background-position: 0% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  transition: background-position 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), -webkit-background-clip 0.35s ease, background-clip 0.35s ease;
+}
+
+.ltdr-card:hover .ltdr-card-quote {
+  background-position: -100% 0;
+}
+
+.ltdr-card-quote {
+  font-size: clamp(1.15rem, 2.5vw, 1.5rem);
   font-weight: var(--font-weight-light);
-  line-height: 1.3;
-  color: var(--color-text-muted);
+  line-height: 1.4;
   letter-spacing: var(--letter-spacing-tight);
+  margin: 0 0 0.75rem 0;
 }
 
-.quote-block {
-  margin-bottom: 40px;
-  transition: color 0.3s ease;
-  cursor: pointer;
-}
-
-.quote-block:last-child {
-  margin-bottom: 0;
-}
-
-.quote-block + .quote-block {
-  border-top: 1px solid var(--color-border);
-  padding-top: 40px;
-}
-
-.quote-block {
-  transition: color 0.3s ease, background 0.3s ease, -webkit-background-clip 0.3s ease, background-clip 0.3s ease;
-}
-
-.quote-block:hover {
-  background: var(--rainbow-hover);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
-}
-
-.quote-block-source {
-  font-size: 16px;
+.ltdr-card-source {
+  font-size: 0.95rem;
   color: var(--color-quote-cite);
-  margin-top: 10px;
-  transition: color 0.3s ease, background 0.3s ease, -webkit-background-clip 0.3s ease, background-clip 0.3s ease;
+  margin-top: auto;
 }
 
-.quote-block-source a {
-  color: var(--color-quote-cite);
+.ltdr-card-source a {
+  color: inherit;
   text-decoration: none;
-  transition: color 0.3s ease, background 0.3s ease, -webkit-background-clip 0.3s ease, background-clip 0.3s ease;
 }
 
-.quote-block:hover .quote-block-source,
-.quote-block:hover .quote-block-source a {
-  background: var(--rainbow-hover);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
+.ltdr-card-source a:hover {
+  text-decoration: underline;
 }
 
 .quote-container {
@@ -983,7 +1066,7 @@ body.cube-dragging {
     font-size: 27px !important;
   }
 
-  .ltdr-quote-list {
-    font-size: 32.4px !important;
+  .ltdr-card-quote {
+    font-size: 1.2rem !important;
   }
 }

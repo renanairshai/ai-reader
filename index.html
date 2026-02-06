@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Design for AI - A Reader</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css?v=2">
 </head>
 <body>
     <canvas id="rainbow-canvas" aria-hidden="true"></canvas>
@@ -18,7 +18,7 @@
             </div>
             <div class="nav-links">
                 <a href="#themes" data-page="themes">Explore Themes</a>
-                <a href="#ltdr" data-page="ltdr">TL;DR</a>
+                <a href="#ltdr" data-page="ltdr">Highlights</a>
                 <a href="#home" data-page="home">AI Reader</a>
             </div>
         </nav>
@@ -28,7 +28,7 @@
             <div class="intro-text">
                 <p>Recent AI advancements challenge designers to re-imagine digital interactions beyond traditional interfaces. As AI demonstrates unprecedented capabilities, <span class="highlight">we can revolutionize not just what computers do, but how people interact with them.</span></p>
                 <p class="intro-spacer">The digital landscape is evolving toward more ephemeral, personalized, and contextual experiences. While text boxes and prompts have become ubiquitous AI entry points, <span class="highlight">we aim to pioneer interfaces that reveal new dimensions of human-AI collaboration.</span></p>
-                <p>For creativity, we need frameworks balancing automation with human expression, <span class="highlight">establishing true co-creation relationships</span> where both contribute their unique strengths.</p>
+                <p><span class="highlight">For creative work, we need frameworks balancing automation with human expression, establishing true co-creation relationships</span> where both contribute their unique strengths.</p>
                 <p>Beyond the technological advancement race, interface and <span class="highlight">user experience design will increasingly determine how AI capabilities translate to user value.</span> Companies that thrive will excel not only in AI technology but in crafting human-centered experiences that make powerful capabilities intuitive and delightful.</p>
             </div>
 
@@ -131,6 +131,30 @@
                             <p>Forward-looking analysis of emerging patterns and future directions in AI interface design.</p>
                         </a>
                     </article>
+                    <article class="link-card">
+                        <a href="https://modemworks.com/research/general-purpose-interfaces/" target="_blank" rel="noopener noreferrer">
+                            <h3>General Purpose Interfaces</h3>
+                            <p>MODEM explores AI-enabled unified interfaces that replace multiple apps, and presents five principles for the future of interfaces.</p>
+                        </a>
+                    </article>
+                    <article class="link-card">
+                        <a href="https://uxdesign.cc/ai-needs-a-new-ui-60063f49e2d5" target="_blank" rel="noopener noreferrer">
+                            <h3>AI needs a new UI</h3>
+                            <p>Current AI interfaces (chat boxes) are insufficient. We need refinement tools that allow precise adjustments rather than complete regeneration.</p>
+                        </a>
+                    </article>
+                    <article class="link-card">
+                        <a href="https://www.youtube.com/watch?v=LCEmiRjPEtQ" target="_blank" rel="noopener noreferrer">
+                            <h3>Software is Changing (again)</h3>
+                            <p>Andrej Karpathy charts software's evolution to LLMs (Software 3.0) programmed by natural language. LLMs are powerful but fallible, requiring interfaces that enable smooth human-AI collaboration.</p>
+                        </a>
+                    </article>
+                    <article class="link-card">
+                        <a href="https://www.youtube.com/watch?v=heiQlxjQ7qs" target="_blank" rel="noopener noreferrer">
+                            <h3>Going beyond the Craft</h3>
+                            <p>Jason Yuan explores the necessity of moving beyond technical craft to infuse AI products with a distinctive soul through the power of narrative and human nature.</p>
+                        </a>
+                    </article>
                 </div>
             </section>
 
@@ -142,7 +166,7 @@
             </footer>
 
             <div class="small-footer">
-                <p>This website was generated entirely by Claude Sonnet 4.</p>
+                <p>This website was built using AI coding tools.</p>
                 <p>© Lightricks Design Ops 2025</p>
             </div>
         </div>
@@ -174,10 +198,10 @@
                         </div>
                     </div>
                     <div class="cube-face face-top">
-                        <div class="cube-face-inner"></div>
+                        <div class="cube-face-inner"><span class="cube-tension-title"></span></div>
                     </div>
                     <div class="cube-face face-bottom">
-                        <div class="cube-face-inner"></div>
+                        <div class="cube-face-inner"><span class="cube-tension-title"></span></div>
                     </div>
                 </div>
                 </div>
@@ -218,71 +242,51 @@
             </div>
         </div>
 
-        <!-- TL;DR Page -->
+        <!-- TL;DR Page - floating overlapping cards, vertical scroll, hover brings to front + rainbow text -->
         <div id="ltdr" class="page">
             <div class="ltdr-content">
                 <p class="ltdr-intro">Short on time? We've distilled key insights and memorable quotes from the essential readings.</p>
-                <div class="ltdr-quote-list">
-                    <blockquote class="quote-block">
-                        "The best AI interfaces are invisible—they amplify human capability without demanding attention to the technology itself."
-                        <div class="quote-block-source">
-                            <a href="https://www.ibm.com/design/ai/" target="_blank" rel="noopener noreferrer">IBM Design for AI Guidelines</a>
-                        </div>
-                    </blockquote>
-                    <blockquote class="quote-block">
-                        "AI doesn't replace creativity; it changes the medium through which creativity flows."
-                        <div class="quote-block-source">
-                            <a href="https://pair.withgoogle.com/" target="_blank" rel="noopener noreferrer">People + AI Research</a>
-                        </div>
-                    </blockquote>
-                    <blockquote class="quote-block">
-                        "The future of AI design isn't about making machines more human, but about making human-machine collaboration more natural."
-                        <div class="quote-block-source">
-                            <a href="https://www.microsoft.com/en-us/research/group/fate/" target="_blank" rel="noopener noreferrer">Microsoft FATE Research</a>
-                        </div>
-                    </blockquote>
-                    <blockquote class="quote-block">
-                        "Users need to understand not just what AI can do, but why it makes the decisions it makes."
-                        <div class="quote-block-source">
-                            <a href="https://www.nngroup.com/articles/ai-ux/" target="_blank" rel="noopener noreferrer">Nielsen Norman Group AI UX</a>
-                        </div>
-                    </blockquote>
-                    <blockquote class="quote-block">
-                        "The challenge isn't building AI that thinks like humans, but designing systems that help humans think better."
-                        <div class="quote-block-source">
-                            <a href="https://www.interaction-design.org/literature/topics/ai-design" target="_blank" rel="noopener noreferrer">Interaction Design Foundation</a>
-                        </div>
-                    </blockquote>
-                    <blockquote class="quote-block">
-                        "Ethical AI design begins with understanding the human context, not the technical capability."
-                        <div class="quote-block-source">
-                            <a href="https://www.thoughtworks.com/insights/blog/responsible-ai-design" target="_blank" rel="noopener noreferrer">Thoughtworks Responsible AI</a>
-                        </div>
-                    </blockquote>
-                    <blockquote class="quote-block">
-                        "Good AI design feels like magic—complex technology that appears simple and intuitive to use."
-                        <div class="quote-block-source">
-                            <a href="https://www.ideo.com/blog/designing-for-ai" target="_blank" rel="noopener noreferrer">IDEO Design for AI</a>
-                        </div>
-                    </blockquote>
-                    <blockquote class="quote-block">
-                        "The most successful AI products don't announce themselves as AI—they simply solve problems better."
-                        <div class="quote-block-source">
-                            <a href="https://aiuxresearch.com/studies/2024" target="_blank" rel="noopener noreferrer">AI UX Research Studies</a>
-                        </div>
-                    </blockquote>
-                    <blockquote class="quote-block">
-                        "Conversational AI succeeds when it feels less like talking to a computer and more like thinking out loud."
-                        <div class="quote-block-source">
-                            <a href="https://aiuxdesign.org/conversational-interfaces" target="_blank" rel="noopener noreferrer">Conversational AI Patterns</a>
-                        </div>
-                    </blockquote>
-                    <blockquote class="quote-block">
-                        "The next frontier in AI design is creating systems that adapt to human emotion and context, not just logic."
-                        <div class="quote-block-source">
-                            <a href="https://futureofai.design/trends" target="_blank" rel="noopener noreferrer">Future of AI Design Trends</a>
-                        </div>
-                    </blockquote>
+                <div class="ltdr-cards-stack" aria-label="Quote cards">
+                    <article class="ltdr-card">
+                        <blockquote class="ltdr-card-quote">The best AI interfaces are invisible—they amplify human capability without demanding attention to the technology itself.</blockquote>
+                        <div class="ltdr-card-source"><a href="https://www.ibm.com/design/ai/" target="_blank" rel="noopener noreferrer">IBM Design for AI Guidelines</a></div>
+                    </article>
+                    <article class="ltdr-card">
+                        <blockquote class="ltdr-card-quote">AI doesn't replace creativity; it changes the medium through which creativity flows.</blockquote>
+                        <div class="ltdr-card-source"><a href="https://pair.withgoogle.com/" target="_blank" rel="noopener noreferrer">People + AI Research</a></div>
+                    </article>
+                    <article class="ltdr-card">
+                        <blockquote class="ltdr-card-quote">The future of AI design isn't about making machines more human, but about making human-machine collaboration more natural.</blockquote>
+                        <div class="ltdr-card-source"><a href="https://www.microsoft.com/en-us/research/group/fate/" target="_blank" rel="noopener noreferrer">Microsoft FATE Research</a></div>
+                    </article>
+                    <article class="ltdr-card">
+                        <blockquote class="ltdr-card-quote">Users need to understand not just what AI can do, but why it makes the decisions it makes.</blockquote>
+                        <div class="ltdr-card-source"><a href="https://www.nngroup.com/articles/ai-ux/" target="_blank" rel="noopener noreferrer">Nielsen Norman Group AI UX</a></div>
+                    </article>
+                    <article class="ltdr-card">
+                        <blockquote class="ltdr-card-quote">The challenge isn't building AI that thinks like humans, but designing systems that help humans think better.</blockquote>
+                        <div class="ltdr-card-source"><a href="https://www.interaction-design.org/literature/topics/ai-design" target="_blank" rel="noopener noreferrer">Interaction Design Foundation</a></div>
+                    </article>
+                    <article class="ltdr-card">
+                        <blockquote class="ltdr-card-quote">Ethical AI design begins with understanding the human context, not the technical capability.</blockquote>
+                        <div class="ltdr-card-source"><a href="https://www.thoughtworks.com/insights/blog/responsible-ai-design" target="_blank" rel="noopener noreferrer">Thoughtworks Responsible AI</a></div>
+                    </article>
+                    <article class="ltdr-card">
+                        <blockquote class="ltdr-card-quote">Good AI design feels like magic—complex technology that appears simple and intuitive to use.</blockquote>
+                        <div class="ltdr-card-source"><a href="https://www.ideo.com/blog/designing-for-ai" target="_blank" rel="noopener noreferrer">IDEO Design for AI</a></div>
+                    </article>
+                    <article class="ltdr-card">
+                        <blockquote class="ltdr-card-quote">The most successful AI products don't announce themselves as AI—they simply solve problems better.</blockquote>
+                        <div class="ltdr-card-source"><a href="https://aiuxresearch.com/studies/2024" target="_blank" rel="noopener noreferrer">AI UX Research Studies</a></div>
+                    </article>
+                    <article class="ltdr-card">
+                        <blockquote class="ltdr-card-quote">Conversational AI succeeds when it feels less like talking to a computer and more like thinking out loud.</blockquote>
+                        <div class="ltdr-card-source"><a href="https://aiuxdesign.org/conversational-interfaces" target="_blank" rel="noopener noreferrer">Conversational AI Patterns</a></div>
+                    </article>
+                    <article class="ltdr-card">
+                        <blockquote class="ltdr-card-quote">The next frontier in AI design is creating systems that adapt to human emotion and context, not just logic.</blockquote>
+                        <div class="ltdr-card-source"><a href="https://futureofai.design/trends" target="_blank" rel="noopener noreferrer">Future of AI Design Trends</a></div>
+                    </article>
                 </div>
             </div>
         </div>
@@ -307,6 +311,7 @@
         </div>
     </div>
 
+    <script type="module" src="js/ltdr-card-motion.js"></script>
     <script src="js/main.js"></script>
 </body>
 </html>
