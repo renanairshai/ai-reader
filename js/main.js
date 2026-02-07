@@ -39,11 +39,11 @@
 
       trailPoints = trailPoints.filter(function (point) {
         point.age += 1;
-        if (point.age > 28) return false;
+        if (point.age > 36) return false;
 
-        const progress = point.age / 28;
-        const alpha = (1 - progress) * 0.6;
-        const size = 20 * (1 - progress);
+        const progress = point.age / 36;
+        const alpha = (1 - progress) * 0.68;
+        const size = 34 * (1 - progress);
 
         const gradient = ctx.createRadialGradient(
           point.x, point.y, 0,
