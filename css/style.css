@@ -612,26 +612,26 @@ body.tension-view #themes .themes-intro-bottom {
   display: contents;
 }
 
-/* Cube is moved to body in JS so it stays fixed (sticky) when the user scrolls; ~15rem right of text (text is max 55% width) */
+/* Cube in tension view: same size as themes state (40vmin), right half of viewport so text stays clear */
 body.tension-view .themes-cube-perspective-wrap {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: fixed;
-  top: calc(11rem + 7vh);
-  /* 15rem right of text, but never closer than 20px to the viewport right edge (cube visible width = 40vmin * 0.4 = 16vmin) */
-  left: min(calc(55% + 15rem), calc(100% - 20px - 16vmin));
-  width: 40vmin;
-  height: 40vmin;
-  perspective: 600px;
+  top: 0;
+  left: 50%;
+  width: 50%;
+  height: 100vh;
+  perspective: 800px;
   perspective-origin: 50% 50%;
-  transform: scale(0.4);
-  transform-origin: 0% 0%;
-  transition: top 0.5s ease, left 0.5s ease, transform 0.5s ease;
   z-index: 10;
   pointer-events: none;
 }
 
 body.tension-view .themes-cube-perspective-wrap .themes-cube-wrapper {
-  pointer-events: auto;
+  width: 40vmin;
+  height: 40vmin;
+  pointer-events: none;
 }
 
 body.tension-view .themes-page-scene {
@@ -639,6 +639,10 @@ body.tension-view .themes-page-scene {
   margin-top: 0;
   padding: 0;
   position: static;
+}
+
+body.tension-view .themes-starfield {
+  display: none;
 }
 
 body.tension-view .logo,
@@ -682,16 +686,19 @@ body.tension-view .nav-links:has(a:hover) .nav-current:not(:hover)::after {
 }
 
 body.tension-view .cube-tension-title {
-  font-size: clamp(1.35rem, 7vmin, 2.25rem);
-  line-height: 1.3;
+  font-size: clamp(1rem, 4vmin, 1.5rem);
+  line-height: 1.35;
+  color: #fff;
 }
 
 body.tension-view .cube-face {
-  box-shadow: inset 0 0 0.75px 1.5px #fff;
+  background: #000;
+  box-shadow: inset 0 0 1px 2px #fff;
 }
 
 body.tension-view .cube-face-inner {
-  padding: 0.9rem;
+  padding: 1.5rem;
+  color: #fff;
 }
 
 /* Tension detail content panel (same styling as main intro text, black in tension view) */
@@ -704,6 +711,8 @@ body.tension-view .tension-content-panel {
   position: relative;
   z-index: 5;
   max-width: 55%;
+  user-select: none;
+  -webkit-user-select: none;
   margin-left: 0;
   margin-top: 1rem;
   padding-right: 1rem;
@@ -753,6 +762,7 @@ body.tension-view .tension-content-title {
 
 /* 3D theme cube: black box, 2px white outline, ~40% viewport; click+drag to rotate */
 .themes-page-scene {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -765,13 +775,33 @@ body.tension-view .tension-content-title {
   user-select: none;
 }
 
+/* Starfield: full-page twinkling stars (space look), only visible on Explore Themes) */
+.themes-starfield {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9998;
+  display: none;
+}
+
 .themes-cube-wrapper {
   width: 40vmin;
   height: 40vmin;
   position: relative;
+  z-index: 1;
   transform-style: preserve-3d;
   will-change: transform;
   user-select: none;
+}
+
+/* Cube appears all at once after a short delay when entering Explore Themes */
+#themes.active .themes-cube-wrapper {
+  opacity: 0;
+}
+#themes.active.cube-visible .themes-cube-wrapper {
+  opacity: 1;
 }
 
 .cube-face {
@@ -861,6 +891,12 @@ body.tension-view .tension-content-title {
 /* --------------------------------------------------------------------------
    TL;DR page - floating overlapping cards, vertical scroll, hover to front + rainbow text
    -------------------------------------------------------------------------- */
+/* Highlights page above starfield so black cards are opaque (stars show only in gaps) */
+#ltdr.page {
+  position: relative;
+  z-index: 9999;
+}
+
 .ltdr-content {
   max-width: var(--max-width-container);
 }

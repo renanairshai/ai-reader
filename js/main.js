@@ -39,9 +39,9 @@
 
       trailPoints = trailPoints.filter(function (point) {
         point.age += 1;
-        if (point.age > 28) return false;
+        if (point.age > 46) return false;
 
-        const progress = point.age / 28;
+        const progress = point.age / 46;
         const alpha = (1 - progress) * 0.6;
         const size = 20 * (1 - progress);
 
@@ -315,11 +315,16 @@
       origShowPage(pageId);
       if (pageId === "themes") {
         exitTensionView();
+        themesPage.classList.remove("cube-visible");
+        setTimeout(function () {
+          themesPage.classList.add("cube-visible");
+        }, 500);
         rotX = -28;
         rotY = 45;
         cursorHasMoved = false;
         animId = requestAnimationFrame(tick);
       } else {
+        themesPage.classList.remove("cube-visible");
         exitTensionView();
         if (animId != null) {
           cancelAnimationFrame(animId);
@@ -511,7 +516,8 @@
         var z = (y + ry) / (ry * 2);
         if (z < 0) z = 0;
         if (z > 1) z = 1;
-        var scale = 0.5 + 0.6 * z;
+        /* Scale grows smoothly as card moves forward (z 0→1) for a nice motion */
+        var scale = 0.48 + 0.68 * z;
         var isHighlight = cards[i] === hoveredCard || cards[i] === selectedCard;
         if (isHighlight) scale *= 1.35;
         var darken = isHighlight ? 0 : (1 - z) * 0.65;
@@ -675,6 +681,104 @@
   }
 
   /* --------------------------------------------------------------------------
+     Themes page: full-page starfield (twinkling stars, space look)
+     -------------------------------------------------------------------------- */
+  function initThemesStarfield() {
+    var canvas = document.getElementById("themes-starfield");
+    var themesPage = document.getElementById("themes");
+    var ltdrPage = document.getElementById("ltdr");
+    if (!canvas || !themesPage) return;
+
+    var stars = [];
+    var starfieldAnimId = null;
+    var starfieldShowTime = null;
+
+    function createStars() {
+      var w = canvas.width;
+      var h = canvas.height;
+      if (w <= 0 || h <= 0) return;
+      var count = Math.min(600, Math.floor((w * h) / 1200));
+      var t = Date.now() * 0.001;
+      stars = [];
+      for (var i = 0; i < count; i++) {
+        stars.push({
+          x: Math.random() * w,
+          y: Math.random() * h,
+          nextTwinkleAt: t + Math.random() * 25,
+          twinkleDuration: 0.4 + Math.random() * 1,
+          gapMin: 3,
+          gapMax: 14,
+          baseAlpha: 0.2 + Math.random() * 0.2,
+          appearAt: null
+        });
+      }
+    }
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      createStars();
+    }
+
+    function draw() {
+      var themesActive = themesPage.classList.contains("active");
+      var tensionView = document.body.classList.contains("tension-view");
+      var ltdrActive = ltdrPage && ltdrPage.classList.contains("active");
+      var showStarfield = (themesActive && !tensionView) || ltdrActive;
+      if (!showStarfield) {
+        canvas.style.display = "none";
+        starfieldShowTime = null;
+        starfieldAnimId = requestAnimationFrame(draw);
+        return;
+      }
+      canvas.style.display = "block";
+      if (canvas.width !== window.innerWidth || canvas.height !== window.innerHeight) {
+        resize();
+      }
+      var ctx = canvas.getContext("2d");
+      if (!ctx || stars.length === 0) {
+        starfieldAnimId = requestAnimationFrame(draw);
+        return;
+      }
+      var t = Date.now() * 0.001;
+      if (starfieldShowTime === null) {
+        starfieldShowTime = t;
+        for (var j = 0; j < stars.length; j++) {
+          stars[j].appearAt = t + Math.random() * 2.5;
+        }
+      }
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      var starSize = 3;
+      var half = Math.floor(starSize / 2);
+      for (var i = 0; i < stars.length; i++) {
+        var s = stars[i];
+        var fadeIn = 1;
+        if (s.appearAt != null) {
+          if (t < s.appearAt) fadeIn = 0;
+          else fadeIn = Math.min(1, (t - s.appearAt) / 0.5);
+        }
+        var alpha = s.baseAlpha * fadeIn;
+        var start = s.nextTwinkleAt - s.twinkleDuration * 0.5;
+        var end = s.nextTwinkleAt + s.twinkleDuration * 0.5;
+        if (t >= start && t <= end) {
+          var p = (t - start) / (end - start);
+          var peak = 4 * p * (1 - p);
+          alpha = (s.baseAlpha + (0.9 - s.baseAlpha) * peak) * fadeIn;
+        } else if (t > end) {
+          s.nextTwinkleAt = t + s.gapMin + Math.random() * (s.gapMax - s.gapMin);
+        }
+        ctx.fillStyle = "rgba(255, 255, 255, " + alpha + ")";
+        ctx.fillRect(Math.floor(s.x) - half, Math.floor(s.y) - half, starSize, starSize);
+      }
+      starfieldAnimId = requestAnimationFrame(draw);
+    }
+
+    resize();
+    window.addEventListener("resize", resize);
+    draw();
+  }
+
+  /* --------------------------------------------------------------------------
      Initialize when the DOM is ready
      -------------------------------------------------------------------------- */
   function init() {
@@ -683,6 +787,7 @@
     initLtdrCardsTilt();
     initLtdrCardsDrag();
     initThemesCube();
+    initThemesStarfield();
     initGalleryScroll();
     showPage(getPageFromHash());
   }
