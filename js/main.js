@@ -265,14 +265,12 @@
         );
         if (dist < 12) {
           var angle = ((rotY % 360) + 360) % 360;
-          /* Map rotY to which face is facing the user. With CSS rotateY: 0°=front, 90°=left, 180°=back, 270°=right */
           var face = angle <= 45 || angle >= 315 ? "front" : angle < 135 ? "left" : angle <= 225 ? "back" : "right";
           document.body.classList.add("tension-view");
           var wrap = document.getElementById("themes-cube-wrap");
           if (wrap && wrap.parentNode !== document.body) {
             document.body.appendChild(wrap);
           }
-          /* Show only the clicked tension’s text on all four faces of the small cube */
           var clickedTitleEl = cube.querySelector(".face-" + face + " .cube-tension-title");
           var clickedTitleHtml = clickedTitleEl ? clickedTitleEl.innerHTML : "";
           cubeFaceNames.forEach(function (f) {
